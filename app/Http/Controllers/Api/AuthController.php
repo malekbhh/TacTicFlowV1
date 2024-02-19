@@ -89,6 +89,38 @@ class AuthController extends Controller
             'password' => bcrypt(Str::random(16)),
         ]);
     }
-}
+    public function passwordReset(Request $request)
+    {
+      $email = $request->validate(['email' => 'required|email']);
     
- 
+      $user = User::where('email', $email)->first();
+    
+      if (!$user) {
+        return response()->json([
+          'message' => 'Aucun utilisateur trouvé avec cette adresse email.'
+        ], 404);
+      }
+    
+      // **Nouveau bloc de code**
+      if ($user->password_reset_token && !$user->password_reset_expires_at->isPast()) {
+        return response()->json([
+          'message' => 'Un lien de réinitialisation du mot de passe a déjà été envoyé à cette adresse email.'
+        ], 429);
+      }
+    
+      $token = Str::random(60);
+    
+      // Enregistrer le jeton et l'expiration dans la base de données
+    
+      $user->password_reset_token = $token;
+      $user->password_reset_expires_at = now()->addHour();
+      $user->save();
+    
+      // Envoyer un email avec le lien de réinitialisation
+    
+      // ...
+    
+      return response()->json([
+        'message' => 'Password reset request received.'
+      ], 200);
+    }}

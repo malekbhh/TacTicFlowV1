@@ -121,7 +121,7 @@ function Login() {
             />
             <p className="text-sm text-center -mt-1 text-blue-500 ">
               Forgot your password?{" "}
-              <Link to="/forgot-password" className="font-bold">
+              <Link to="/reset-password" className="font-bold">
                 Reset it here
               </Link>
             </p>

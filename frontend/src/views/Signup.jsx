@@ -140,10 +140,11 @@ function Signup() {
               <div className="text-red-500 rounded-lg   flex items-center justify-between">
                 <div className="flex items-center">
                   <button
-                    className="p-2 rounded-md text-gray-400 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                    className="p-2 rounded-md  hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
                     onClick={() => setErrors(null)}
                   >
                     <svg
+                      text-red-500
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-4 w-4"
                       fill="none"
@@ -158,7 +159,7 @@ function Signup() {
                       />
                     </svg>
                   </button>
-                  <div className="flex flex-col ">
+                  <div className="flex flex-col items-center">
                     {Object.keys(errors).map((key) => (
                       <p className="font-medium text-sm" key={key}>
                         {errors[key][0]}

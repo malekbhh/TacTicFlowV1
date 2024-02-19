@@ -31,3 +31,6 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // Remove one of the following lines, as they are duplicate
 Route::post('/loginwithgoogle', [AuthController::class, 'handleGoogleCallback']);
+
+
+Route::post('/password-reset', [AuthController::class, 'passwordReset']); // Add this new route

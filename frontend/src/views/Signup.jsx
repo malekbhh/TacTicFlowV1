@@ -136,17 +136,42 @@ function Signup() {
               placeholder="Password Confirmation"
               type="password"
             />
+            {errors && (
+              <div className="text-red-500 rounded-lg   flex items-center justify-between">
+                <div className="flex items-center">
+                  <button
+                    className="p-2 rounded-md text-gray-400 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                    onClick={() => setErrors(null)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                  <div className="flex flex-col ">
+                    {Object.keys(errors).map((key) => (
+                      <p className="font-medium text-sm" key={key}>
+                        {errors[key][0]}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
             <button className="btn btn-block h-8  bg-[#212177]   text-white  items-center px-4 w-auto pb-1  justify-center font-medium mb-2 mt-6 rounded-xl  ">
               Signup
             </button>
           </form>
-          {errors && (
-            <div className="alert bg-red-100 text-red-700 p-2 rounded-md mb-4">
-              {Object.keys(errors).map((key) => (
-                <p key={key}>{errors[key][0]}</p>
-              ))}
-            </div>
-          )}
 
           <p className=" text-sm text-gray-400">
             Already have an account?{" "}

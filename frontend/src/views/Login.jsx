@@ -125,15 +125,33 @@ function Login() {
                 Reset it here
               </Link>
             </p>
-            <button className=" h-8 w-24  bg-[#212177]   text-white  items-center px-4  pb-1  justify-center font-medium  mt-6 rounded-xl  ">
+            {message && (
+              <div className="  text-red-500 rounded-lg   flex items-center justify-between">
+                <div className="flex items-center">
+                  <button onClick={() => setMessage(null)}>
+                    <svg
+                      className="w-6 h-6 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M10 14l2-2m0 0l2-2m-2 2l-2 2m2-2l2 2m-2-2l-2-2m2 2l2 2m-2-2l-2-2m2 2l2 2m-2-2l-2-2m2 2l2 2m-2-2l-2-2"
+                      />
+                    </svg>
+                  </button>
+                  <p className="font-medium text-sm">{message}</p>
+                </div>
+              </div>
+            )}
+            <button className=" h-8 w-24  bg-[#212177] mb-1   text-white  items-center px-4  pb-1  justify-center font-medium  mt-4 rounded-xl  ">
               Login
             </button>
           </form>
-          {message && (
-            <div className="alert bg-red-100 text-red-700 p-2 rounded-md mb-4">
-              <p>{message}</p>
-            </div>
-          )}
 
           <div className="relative flex mt-1 justify-center text-gray-400 z-[1]">
             <span className="font-extralight font-inter">Not</span>

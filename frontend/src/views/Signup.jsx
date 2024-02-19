@@ -16,6 +16,7 @@ function Signup() {
   const [errors, setErrors] = useState(null);
   const [value, setValue] = useState("");
   const [redirect, setRedirect] = useState(false);
+
   const handleGoogleLogin = async () => {
     const auth = getAuth();
     const googleProvider = new GoogleAuthProvider();
@@ -33,8 +34,8 @@ function Signup() {
         setUser(response.data.user);
         setToken(response.data.token);
 
-        // Redirect to user view
         setRedirect(true);
+        window.location.reload();
       } else {
         console.error("Error logging in with Google:", response.data.message);
       }
@@ -48,7 +49,7 @@ function Signup() {
   }, []);
 
   if (redirect) {
-    return <Navigate to="/user" />; // Rediriger vers "/user" après la connexion
+    return <Navigate to="/user" />;
   }
   const onSubmit = (ev) => {
     ev.preventDefault();

@@ -1,91 +1,184 @@
 import React, { useState } from "react";
 import axiosClient from "../axios-client.js";
-import { Link } from "react-router-dom";
 
 function ResetPassword() {
   const [email, setEmail] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // For loading indicator
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [message, setMessage] = useState("");
+  const [showNewPasswordForm, setShowNewPasswordForm] = useState(false);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const onSubmit = async (ev) => {
+    ev.preventDefault();
 
     try {
-      setIsLoading(true); // Show loading indicator
+      const response = await axiosClient.post("/passwordreset", {
+        email: email,
+      });
 
-      const response = await axiosClient.post("/password-reset", { email });
-
-      if (response.status === 200) {
-        setSuccessMessage(
-          "Un lien de réinitialisation du mot de passe a été envoyé à votre adresse email."
-        );
-      } else if (response.status === 404) {
-        setErrorMessage(
-          "L'adresse email saisie n'est pas enregistrée. Veuillez créer un compte à la place."
-        );
-      } else if (response.status === 422) {
-        // Handle specific validation errors
-        setErrorMessage(
-          response.data.message || "Veuillez entrer une adresse email valide."
-        );
+      if (response.data.message) {
+        setMessage(response.data.message);
       } else {
-        setErrorMessage(
-          "Une erreur est survenue. Veuillez réessayer ultérieurement."
-        );
+        setMessage("L'utilisateur existe avec cette adresse email.");
+        setShowNewPasswordForm(true);
       }
     } catch (err) {
-      setErrorMessage(
-        "Une erreur est survenue. Veuillez réessayer ultérieurement."
-      );
-    } finally {
-      setIsLoading(false); // Hide loading indicator
+      const response = err.response;
+      if (response && response.status === 404) {
+        setMessage(response.data.message);
+      } else {
+        setMessage(
+          "Une erreur s'est produite. Veuillez réessayer ultérieurement."
+        );
+      }
+    }
+  };
+
+  const onNewPasswordSubmit = async (ev) => {
+    ev.preventDefault();
+
+    if (password !== passwordConfirmation) {
+      setMessage("Les mots de passe ne correspondent pas.");
+      return;
+    }
+
+    try {
+      const response = await axiosClient.post("/newpassword", {
+        email: email,
+        password: password,
+        password_confirmation: passwordConfirmation,
+      });
+
+      if (response.data.message) {
+        setMessage(response.data.message);
+      } else {
+        setMessage("Mot de passe réinitialisé avec succès !");
+        // Redirigez vers la page de connexion ou fournissez des instructions supplémentaires
+      }
+    } catch (err) {
+      const response = err.response;
+      if (response && response.status === 422) {
+        setMessage(response.data.errors.password[0]);
+      } else {
+        setMessage(
+          "Une erreur s'est produite. Veuillez réessayer ultérieurement."
+        );
+      }
     }
   };
 
   return (
     <div className="flex items-center justify-center">
-      <div className="z-10 flex min-h-screen overflow-hidden justify-center items-center gap-52">
-        <div className="px-8 pt-4 pb-8 h-full bg-white w-90 rounded-2xl flex flex-col gap-1 items-center justify-center">
-          <img className="h-16" src="/logo2.png" alt="logo" />
-          <p className="mb-4 text-midnightblue font-medium flex items-center justify-center text-xl">
-            Réinitialiser votre mot de passe
-          </p>
+      {showNewPasswordForm ? (
+        <div className="z-10 flex min-h-screen overflow-hidden justify-center items-center gap-52">
+          <div className="px-8 pt-4 pb-8 h-full bg-white w-90 rounded-2xl flex flex-col gap-1 items-center justify-center">
+            <form
+              className="flex flex-col items-center gap-2"
+              onSubmit={onNewPasswordSubmit}
+            >
+              <span className="text-gray-600 text-xs mb-4 block w-full max-w-xs">
+                Réinitialisation du mot de passe
+              </span>
 
-          <form
-            className="flex flex-col items-center gap-2"
-            onSubmit={handleSubmit}
-          >
-            <span className="text-gray-600 text-xs mb-4 block w-full max-w-xs">
-              <span className="text-blue-500 font-bold">
+              <input
+                className="w-80 border border-gray-300 text-gray-500 rounded-xl px-5 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                placeholder="Nouveau mot de passe"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+              />
+              <input
+                className="w-80 border border-gray-300 text-gray-500 rounded-xl px-5 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                placeholder="Confirmer le nouveau mot de passe"
+                value={passwordConfirmation}
+                onChange={(e) => setPasswordConfirmation(e.target.value)}
+                type="password"
+              />
+
+              {message && (
+                <div className="text-red-500 rounded-lg flex items-center justify-between">
+                  <div className="flex items-center">
+                    <button onClick={() => setMessage(null)}>
+                      <svg
+                        className="w-6 h-6 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M10 14l2-2m0 0l2-2m-2 2l-2 2m2-2l2 2m-2-2l-2-2m2 2l2 2m-2-2l-2-2"
+                        />
+                      </svg>
+                    </button>
+                    <p className="font-medium text-sm">{message}</p>
+                  </div>
+                </div>
+              )}
+              <button
+                type="submit"
+                className="h-8 w-24 bg-[#212177] mb-1 text-white items-center px-4 pb-1 justify-center font-medium mt-4 rounded-xl"
+              >
+                Modifier le mot de passe
+              </button>
+            </form>
+          </div>
+        </div>
+      ) : (
+        <div className="z-10 flex min-h-screen overflow-hidden justify-center items-center gap-52">
+          <div className="px-8 pt-4 pb-8 h-full bg-white w-90 rounded-2xl flex flex-col gap-1 items-center justify-center">
+            <form
+              className="flex flex-col items-center gap-2"
+              onSubmit={onSubmit}
+            >
+              <span className="text-gray-600 text-xs mb-4 block w-full max-w-xs">
                 Mot de passe oublié ?
               </span>
-              Pas de problème. Indiquez simplement votre adresse email et nous
-              vous enverrons un lien de réinitialisation de mot de passe qui
-              vous permettra d'en choisir un nouveau.
-            </span>
 
-            {errorMessage && (
-              <p className="text-red-500 text-xs mb-4">{errorMessage}</p>
-            )}
+              <input
+                className="w-80 border border-gray-300 text-gray-500 rounded-xl px-5 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                placeholder="Entrez votre adresse email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+              />
 
-            <input
-              className="w-80 border border-gray-300 text-gray-500 rounded-xl px-5 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              placeholder="Entrez votre adresse email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              type="email"
-            />
-
-            <button
-              type="submit"
-              className="h-8 w-24 bg-[#212177] mb-1 text-white items-center px-4 pb-1 justify-center font-medium mt-4 rounded-xl"
-              disabled={isLoading} // Disable button during request
-            >
-              {isLoading ? "Envoi en cours..." : "Envoyer"}
-            </button>
-          </form>
+              {message && (
+                <div className="text-red-500 rounded-lg flex items-center justify-between">
+                  <div className="flex items-center">
+                    <button onClick={() => setMessage(null)}>
+                      <svg
+                        className="w-6 h-6 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M10 14l2-2m0 0l2-2m-2 2l-2 2m2-2l2 2m-2-2l-2-2m2 2l2 2m-2-2l-2-2"
+                        />
+                      </svg>
+                    </button>
+                    <p className="font-medium text-sm">{message}</p>
+                  </div>
+                </div>
+              )}
+              <button
+                type="submit"
+                className="h-8 w-24 bg-[#212177] mb-1 text-white items-center px-4 pb-1 justify-center font-medium mt-4 rounded-xl"
+              >
+                Envoyer
+              </button>
+            </form>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

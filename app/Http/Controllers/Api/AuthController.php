@@ -8,8 +8,11 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignupRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail; // Importez la classe Mail
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Mail\Mailer;
+use Illuminate\Contracts\Mail\Message;
 use Laravel\Socialite\Contracts\User as SocialiteUser;
 class AuthController extends Controller
 {
@@ -89,38 +92,61 @@ class AuthController extends Controller
             'password' => bcrypt(Str::random(16)),
         ]);
     }
+   
+    
     public function passwordReset(Request $request)
     {
-      $email = $request->validate(['email' => 'required|email']);
-    
-      $user = User::where('email', $email)->first();
-    
-      if (!$user) {
+        try {
+            // Validation de la requête
+            $data = $request->validate([
+                'email' => 'required|email',
+            ]);
+
+            // Vérifier si l'utilisateur existe
+            $user = User::where('email', $data['email'])->first();
+
+            if (!$user) {
+                return response()->json([
+                    'message' => 'Aucun utilisateur trouvé avec cette adresse email.'
+                ], 404);
+            }
+
+           
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Une erreur s\'est produite lors de l\'envoi de l\'email de réinitialisation du mot de passe. Veuillez réessayer ultérieurement.'
+            ], 500);
+        
+}}
+public function newPassword(Request $request)
+{
+    try {
+        $data = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string|min:8|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/',
+        ]);
+
+        $user = User::where('email', $data['email'])->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Aucun utilisateur trouvé avec cette adresse email.'
+            ], 404);
+        }
+
+        $user->password = bcrypt($data['password']);
+        $user->save();
+
         return response()->json([
-          'message' => 'Aucun utilisateur trouvé avec cette adresse email.'
-        ], 404);
-      }
-    
-      // **Nouveau bloc de code**
-      if ($user->password_reset_token && !$user->password_reset_expires_at->isPast()) {
+            'message' => 'Mot de passe modifié avec succès.'
+        ], 200);
+
+    } catch (\Exception $e) {
         return response()->json([
-          'message' => 'Un lien de réinitialisation du mot de passe a déjà été envoyé à cette adresse email.'
-        ], 429);
-      }
-    
-      $token = Str::random(60);
-    
-      // Enregistrer le jeton et l'expiration dans la base de données
-    
-      $user->password_reset_token = $token;
-      $user->password_reset_expires_at = now()->addHour();
-      $user->save();
-    
-      // Envoyer un email avec le lien de réinitialisation
-    
-      // ...
-    
-      return response()->json([
-        'message' => 'Password reset request received.'
-      ], 200);
-    }}
+            'message' => 'Une erreur s\'est produite lors de la modification du mot de passe. Veuillez réessayer ultérieurement.'
+        ], 500);
+    }
+}
+ 
+}

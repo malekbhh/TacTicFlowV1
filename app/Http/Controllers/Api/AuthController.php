@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignupRequest;
+use App\Http\Requests\ResetPasswordRequest;
+
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail; // Importez la classe Mail
@@ -92,8 +94,6 @@ class AuthController extends Controller
             'password' => bcrypt(Str::random(16)),
         ]);
     }
-   
-    
     public function passwordReset(Request $request)
     {
         try {
@@ -119,7 +119,7 @@ class AuthController extends Controller
             ], 500);
         
 }}
-public function newPassword(Request $request)
+public function newPassword(ResetPasswordRequest $request)
 {
     try {
         $data = $request->validate([
@@ -138,15 +138,17 @@ public function newPassword(Request $request)
         $user->password = bcrypt($data['password']);
         $user->save();
 
+        // Retourner une réponse JSON pour une requête AJAX
         return response()->json([
             'message' => 'Mot de passe modifié avec succès.'
         ], 200);
 
+        // Si vous souhaitez rediriger depuis le serveur, vous ne devez pas avoir de deuxième return ici
+        // return redirect('/login')->with('success', 'Mot de passe modifié avec succès.');
     } catch (\Exception $e) {
         return response()->json([
-            'message' => 'Une erreur s\'est produite lors de la modification du mot de passe. Veuillez réessayer ultérieurement.'
+            'message' => 'Une erreur s\'est produite lors de la modification du mot de passe.'
         ], 500);
     }
 }
- 
 }

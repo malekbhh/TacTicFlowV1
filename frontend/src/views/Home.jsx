@@ -23,11 +23,11 @@ function Home() {
         </svg>
       </div>
 
-      <div className="text-white absolute text-3xl w-[846px] h-[155px] adivsolute my-0 mx-[!important] top-[220px] left-[93px] leading-[80px] inline-block whitespace-pre-wrap [text-shadow:-5px_10px_4px_rgba(0,_0,_0,_0.25)] mq450:text-[29px] mq450:leading-[48px] mq1050:text-[38px] mq1050:leading-[64px] font-bold">
+      <div className="text-white absolute text-3xl w-846 h-155 adivsolute my-0 mx-[!important] top-220 left-[93px] leading-[80px] inline-block whitespace-pre-wrap [text-shadow:-5px_10px_4px_rgba(0,_0,_0,_0.25)] mq450:text-[29px] mq450:leading-[48px] mq1050:text-[38px] mq1050:leading-[64px] font-bold">
         <p className="m-0">{`Empower Your Projects, Streamline  `}</p>
         <p className="m-0">
           <span>{`with `}</span>
-          <span className="text-[50px]">TacticFlow</span>
+          <span className="text-50px">TacticFlow</span>
         </p>
 
         <p className="text-lg mt-10 text-shadow-none">Take the first step</p>
@@ -45,7 +45,7 @@ function Home() {
         <img className="h-80" src="/homepic.png" alt="homepic" />
       </div>
       <img
-        className="w-[126px] h-[144.9px] absolute my-0 mx-[!important] top-[125px] right-[520px] object-contain z-[3]"
+        className="w-126 h-144.9 absolute my-0 mx-[!important] top-[125px] right-[520px] object-contain z-[3]"
         loading="eager"
         alt=""
         src="/group@2x.png"

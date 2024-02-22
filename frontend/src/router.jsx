@@ -10,6 +10,7 @@ import Home from "./views/Home.jsx";
 import GoogleCallback from "./components/GoogleCallback.jsx";
 import { Navigate } from "react-router-dom";
 import ResetPassword from "./views/ResetPassword.jsx";
+import NewPassword from "./views/NewPassword.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -47,8 +48,12 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/reset-password",
+        path: "/passwordreset",
         element: <ResetPassword />,
+      },
+      {
+        path: "/newpassword",
+        element: <NewPassword />,
       },
     ],
   },

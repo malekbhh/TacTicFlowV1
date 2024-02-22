@@ -47,9 +47,6 @@ function Login() {
     setValue(localStorage.getItem("email"));
   }, []);
 
-  //if (redirect) {
-  // return <Navigate to="/user" />; // Rediriger vers "/user" après la connexion
-  //}
   const onSubmit = (ev) => {
     ev.preventDefault();
 
@@ -76,13 +73,13 @@ function Login() {
   }
   return (
     <div className="flex items-center justify-center">
-      <div></div>
       <div className=" z-10  flex min-h-screen overflow-hidden justify-center items-center gap-52 ">
         <div className=" px-8 pt-4 pb-8  h-full bg-white w-90  rounded-2xl flex flex-col gap-1 items-center justify-center ">
           <img className="h-16" src="/logo2.png" alt="logo" />
           <p className=" mb-4  text-midnightblue font-medium flex items-center justify-center text-xl ">
             Login into your account
           </p>
+
           <button
             onClick={handleGoogleLogin}
             className="bg-gray-200 h-10 flex items-center w-80 justify-center rounded-xl"
@@ -121,7 +118,7 @@ function Login() {
             />
             <p className="text-sm text-center -mt-1 text-blue-500 ">
               Forgot your password?{" "}
-              <Link to="/reset-password" className="font-bold">
+              <Link to="/passwordreset" className="font-bold">
                 Reset it here
               </Link>
             </p>

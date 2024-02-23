@@ -23,8 +23,14 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
-   
-});
+       // Routes pour la gestion des projets
+       Route::get('/projects', [ProjectController::class, 'index']);
+       Route::post('/projects', [ProjectController::class, 'store']);
+       Route::get('/projects/{id}', [ProjectController::class, 'show']);
+       Route::put('/projects/{id}', [ProjectController::class, 'update']);
+       Route::delete('/projects/{id}', [ProjectController::class, 'destroy']);
+   });
+
 
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);

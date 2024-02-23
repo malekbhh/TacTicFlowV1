@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axiosClient from "../axios-client.js";
+
 const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [newProjectData, setNewProjectData] = useState({
@@ -13,7 +14,7 @@ const Projects = () => {
 
   const loadProjects = async () => {
     try {
-      const response = await axiosClient.get("/api/projects");
+      const response = await axiosClient.get("/projects");
       setProjects(response.data);
     } catch (error) {
       console.error("Erreur lors du chargement des projets :", error);
@@ -52,7 +53,7 @@ const Projects = () => {
 
     try {
       const response = await axiosClient.put(
-        `/api/projects/${projectId}`,
+        `/projects/${projectId}`,
         updatedProjectData
       );
       console.log("Projet mis à jour avec succès :", response.data);
@@ -94,19 +95,24 @@ const Projects = () => {
         )}
       </ul>
 
-      <h2>Ajouter un Projet</h2>
-      <div>
-        <label>Titre:</label>
+      <h2 className="text-2xl font-bold my-4">Ajouter un Projet</h2>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">
+          Titre:
+        </label>
         <input
           type="text"
           value={newProjectData.title}
           onChange={(e) =>
             setNewProjectData({ ...newProjectData, title: e.target.value })
           }
+          className="mt-1 p-2 border rounded-md w-full"
         />
       </div>
-      <div>
-        <label>Description:</label>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">
+          Description:
+        </label>
         <input
           type="text"
           value={newProjectData.description}
@@ -116,9 +122,15 @@ const Projects = () => {
               description: e.target.value,
             })
           }
+          className="mt-1 p-2 border rounded-md w-full"
         />
       </div>
-      <button onClick={handleAddProject}>Ajouter le Projet</button>
+      <button
+        onClick={handleAddProject}
+        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Ajouter le Projet
+      </button>
     </div>
   );
 };

@@ -20,3 +20,8 @@ trait CreatesApplication
         return $app;
     }
 }
+function drachniya {
+
+return;
+
+}

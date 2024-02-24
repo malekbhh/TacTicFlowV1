@@ -8,8 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     use HasFactory;
+    protected $fillable = ['column_c', 'title', 'description', 'user_id'];
 
-    protected $fillable = ['title', 'description', 'user_id'];
+    public function timestamps()
+    {
+        return ['created_at', 'updated_at'];
+    }
+
+    protected $rules = [
+        'title' => 'required|string|max:255',
+        'description' => 'required|string',
+    ];
 
     public function user()
     {

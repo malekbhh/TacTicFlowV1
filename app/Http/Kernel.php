@@ -21,7 +21,8 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        \Fruitcake\Cors\HandleCors::class      
+        \Illuminate\Session\Middleware\AuthenticateSession::class,
+        \Fruitcake\Cors\HandleCors::class,
     ];
 
     /**
@@ -39,6 +40,8 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \Illuminate\Session\Middleware\AuthenticateSession::class,
             \Fruitcake\Cors\HandleCors::class,
+          
+            
         ],
 
         'api' => [

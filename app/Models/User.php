@@ -23,9 +23,9 @@ class User extends Authenticatable
     ];
 
    // In User.php model
-public function projects()
-{
-    return $this->hasMany(Project::class);
-}
+   public function projects()
+   {
+       return $this->hasMany(Project::class);
+   }
 
 }

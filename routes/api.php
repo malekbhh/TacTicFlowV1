@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\AuthController;
 
 /*
@@ -19,11 +19,11 @@ use App\Http\Controllers\Api\AuthController;
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
      // Projects routes
-     Route::get('/projects', [AuthController::class, 'index']);
-     Route::get('/projects/{project}', [AuthController::class, 'show']);
-     Route::post('/projects', [AuthController::class, 'store']);
-     Route::put('/projects/{project}', [AuthController::class, 'update']);
-     Route::delete('/projects/{project}', [AuthController::class, 'destroy']);
+     Route::get('/projects', [ProjectController::class, 'index']);
+     Route::get('/projects/{project}', [ProjectController::class, 'show']);
+     Route::post('/projects', [ProjectController::class, 'store']);
+     Route::put('/projects/{project}', [ProjectController::class, 'update']);
+     Route::delete('/projects/{project}', [ProjectController::class, 'destroy']);
  
 
     Route::get('/user', function (Request $request) {

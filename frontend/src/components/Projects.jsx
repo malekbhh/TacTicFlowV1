@@ -7,40 +7,83 @@ const Projects = () => {
     title: "",
     description: "",
   });
-
-  useEffect(() => {
-    loadProjects();
-  }, []);
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const loadProjects = async () => {
     try {
-      const response = await axiosClient.get("/projects");
+      const response = await axiosClient.get("/projects", {
+        headers: {
+          "X-CSRF-TOKEN": axiosClient.defaults.headers.common["X-CSRF-TOKEN"],
+        },
+      });
       setProjects(response.data);
     } catch (error) {
       console.error("Erreur lors du chargement des projets :", error);
     }
   };
 
-  const handleAddProject = async () => {
+  const validateProjectData = (data) => {
+    const errors = {};
+
+    if (!data.title) {
+      errors.title = "Le titre est obligatoire";
+    }
+
+    if (!data.description) {
+      errors.description = "La description est obligatoire";
+    }
+
+    return errors;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const errors = validateProjectData(newProjectData);
+
+    if (Object.keys(errors).length > 0) {
+      setErrors(errors);
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
       const response = await axiosClient.post("/projects", newProjectData, {
         withCredentials: true,
       });
       console.log("Projet ajouté avec succès :", response.data);
-
-      // Mettez à jour les projets après l'ajout
       loadProjects();
-
-      // Mettez à jour l'utilisateur après l'ajout du projet
-      const updatedUser = await axiosClient.get("/user");
-      setUser(updatedUser.data);
     } catch (error) {
-      console.error("Erreur lors de l'ajout du projet :", error);
-      // Ajoutez cette ligne pour afficher l'erreur côté serveur dans la console
-      console.error("Erreur serveur :", error.response.data);
+      if (error.response && error.response.status === 500) {
+        console.error("Internal server error:", error.response.data);
+      } else {
+        console.error("Error adding project:", error);
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  useEffect(() => {
+    const csrfToken = document.cookie.match(/XSRF-TOKEN=(.+);/)[1];
+    axiosClient.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+    loadProjects();
+  }, []);
+  const deleteProject = async (projectId) => {
+    try {
+      await axiosClient.delete(`/projects/${projectId}`, {
+        withCredentials: true,
+      });
+      console.log(`Projet avec l'ID ${projectId} supprimé avec succès`);
+      loadProjects();
+    } catch (error) {
+      console.error(
+        `Erreur lors de la suppression du projet : ${error.message}`
+      );
+    }
+  };
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-3xl font-bold mb-4">Liste des Projets</h2>
@@ -58,7 +101,7 @@ const Projects = () => {
                   Mettre à Jour
                 </button>
                 <button
-                  onClick={() => handleDeleteProject(project.id)}
+                  onClick={() => deleteProject(project.id)}
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
                 >
                   Supprimer
@@ -72,41 +115,56 @@ const Projects = () => {
       </ul>
 
       <h2 className="text-2xl font-bold my-4">Ajouter un Projet</h2>
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">
-          Titre:
-        </label>
-        <input
-          type="text"
-          value={newProjectData.title}
-          onChange={(e) =>
-            setNewProjectData({ ...newProjectData, title: e.target.value })
-          }
-          className="mt-1 p-2 border rounded-md w-full"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">
-          Description:
-        </label>
-        <input
-          type="text"
-          value={newProjectData.description}
-          onChange={(e) =>
-            setNewProjectData({
-              ...newProjectData,
-              description: e.target.value,
-            })
-          }
-          className="mt-1 p-2 border rounded-md w-full"
-        />
-      </div>
-      <button
-        onClick={handleAddProject}
-        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Ajouter le Projet
-      </button>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">
+            Titre:
+          </label>
+          <input
+            type="text"
+            name="title"
+            value={newProjectData.title}
+            onChange={(e) =>
+              setNewProjectData({
+                ...newProjectData,
+                title: e.target.value,
+              })
+            }
+            className="mt-1 p-2 border rounded-md w-full"
+            error={errors.title}
+          />
+          {errors.title && (
+            <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">
+            Description:
+          </label>
+          <textarea
+            name="description"
+            value={newProjectData.description}
+            onChange={(e) =>
+              setNewProjectData({
+                ...newProjectData,
+                description: e.target.value,
+              })
+            }
+            className="mt-1 p-2 border rounded-md w-full"
+            error={errors.description}
+          />
+          {errors.description && (
+            <p className="text-red-500 text-sm mt-1">{errors.description}</p>
+          )}
+        </div>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+        >
+          {isSubmitting ? "En cours..." : "Ajouter le Projet"}
+        </button>
+      </form>
     </div>
   );
 };

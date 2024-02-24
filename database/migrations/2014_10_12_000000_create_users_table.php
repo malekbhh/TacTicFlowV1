@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password')->nullable(); // Changed to nullable()
-            $table->string('google_id'); // Added
-            $table->string('avatar')->nullable(); // Added
+            $table->string('google_id')->nullable();
+            $table->string('password')->nullable();
+            $table->string('avatar')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -35,8 +35,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('users');
     }
-    public function projects()
-{
-    return $this->hasMany(Project::class);
-}
+  
 };

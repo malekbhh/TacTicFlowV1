@@ -23,45 +23,21 @@ const Projects = () => {
 
   const handleAddProject = async () => {
     try {
-      const response = await axiosClient.post("/projects", newProjectData);
+      const response = await axiosClient.post("/projects", newProjectData, {
+        withCredentials: true,
+      });
       console.log("Projet ajouté avec succès :", response.data);
 
-      // Recharger la liste des projets après l'ajout
+      // Mettez à jour les projets après l'ajout
       loadProjects();
+
+      // Mettez à jour l'utilisateur après l'ajout du projet
+      const updatedUser = await axiosClient.get("/user");
+      setUser(updatedUser.data);
     } catch (error) {
       console.error("Erreur lors de l'ajout du projet :", error);
-    }
-  };
-
-  const handleDeleteProject = async (projectId) => {
-    try {
-      const response = await axiosClient.delete(`/projects/${projectId}`);
-      console.log("Projet supprimé avec succès :", response.data);
-
-      // Recharger la liste des projets après la suppression
-      loadProjects();
-    } catch (error) {
-      console.error("Erreur lors de la suppression du projet :", error);
-    }
-  };
-
-  const handleUpdateProject = async (projectId) => {
-    const updatedProjectData = {
-      title: "Nouveau Titre",
-      description: "Nouvelle Description",
-    };
-
-    try {
-      const response = await axiosClient.put(
-        `/projects/${projectId}`,
-        updatedProjectData
-      );
-      console.log("Projet mis à jour avec succès :", response.data);
-
-      // Recharger la liste des projets après la mise à jour
-      loadProjects();
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour du projet :", error);
+      // Ajoutez cette ligne pour afficher l'erreur côté serveur dans la console
+      console.error("Erreur serveur :", error.response.data);
     }
   };
 

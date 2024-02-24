@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignupRequest;
 use App\Http\Requests\ResetPasswordRequest;
-
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail; // Importez la classe Mail
@@ -151,4 +151,38 @@ public function newPassword(ResetPasswordRequest $request)
         ], 500);
     }
 }
+public function index()
+{
+    $projects = Project::all();
+    return response()->json($projects);
 }
+
+public function show(Project $project)
+{
+    return response()->json($project);
+}
+
+public function store(Request $request)
+{
+    // Ensure the current user is correctly retrieved
+    $user = $request->user();
+    
+    // Dump and die to inspect the user
+    dd($user);
+
+    // Create a new project associated with the current user
+    $project = $user->projects()->create($request->all());
+
+    // Return the newly created project in the response
+    return response()->json($project, 201);
+}
+
+
+
+
+
+
+
+
+}
+

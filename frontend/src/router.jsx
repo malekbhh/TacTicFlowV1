@@ -11,26 +11,36 @@ import { Navigate } from "react-router-dom";
 import ResetPassword from "./views/ResetPassword.jsx";
 import NewPassword from "./views/NewPassword.jsx";
 import Projects from "./components/Projects.jsx";
+import UserAdmin from "./views/UserAdmin.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <DefaultLayout />,
     children: [
       {
-        path: "/",
-        element: <Navigate to="/user" />,
-      },
-
-      {
         path: "/user",
         element: <User />,
       },
       {
         path: "/projects",
-        element: <Projects />,
+        element: (
+          <ProtectedRoute allowedRoles={["chef", "user", "member", "admin"]}>
+            <Projects />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/userAdmin",
+        element: (
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <UserAdmin />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
+
   {
     path: "/",
     element: <GuestLayout />,

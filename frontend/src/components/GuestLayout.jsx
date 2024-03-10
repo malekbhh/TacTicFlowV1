@@ -12,7 +12,7 @@ function GuestLayout() {
   };
   return (
     <div
-      className="w-full relative   login-signup-form h-screen flex justify-center items-center"
+      className="w-full"
       style={{
         background: "linear-gradient(234.84deg, #212177 27.56%, #ce3fa5)",
       }}

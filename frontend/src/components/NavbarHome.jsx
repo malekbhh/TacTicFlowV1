@@ -3,29 +3,31 @@ import { Link } from "react-router-dom";
 function NavbarHome() {
   return (
     <div>
-      <nav className="bg-white  fixed w-full z-20 top-0 start-0 border-b  border-gray-600">
+      <nav className="   w-full z-20 top-0 start-0 shadow-md   ">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a
             href="https://tac-tic.net/"
-            className="flex items-center space-x-3 rtl:space-x-reverse"
+            className="flex items-center space-x-1 rtl:space-x-reverse"
           >
             <img src="/logo2.png" className="h-12" alt="TacTicFlowLogo" />
-            <span
-              className="self-center text-2xl font-semibold whitespace-nowrap "
-              style={{ letterSpacing: "5px" }}
-            >
-              actiwFlow
-            </span>
+            <h3 className="mt-1 relative text-white text-2xl  tracking-[0.16em] font-bold font-inherit whitespace-nowrap z-[3]">
+              acticFlow
+            </h3>
           </a>
-          <div class="flex md:order-2 text-[#212177]  space-x-3 md:space-x-0 rtl:space-x-reverse">
-            <Link to="/login">
-              <button
-                type="button"
-                class="text-white  bg-[#212177] hover:bg-[#FFC107] hover:font-bold  hover:text-[#212177]   font-medium rounded-lg text-sm px-4 py-2 text-center  "
-              >
-                Login
-              </button>
-            </Link>
+          <div class="flex md:order-2   space-x-3 md:space-x-0 rtl:space-x-reverse">
+            <div className="button-container flex flex-col md:flex-row items-center space-y-4 md:space-y-0">
+              <Link to="/login">
+                <button className="login-btn translate-x-7 bg-gradient-to-r from-red-500 to-red-700 py-2.5 px-6 rounded-full text-white font-medium shadow-md hover:shadow-lg transition duration-300 ease-in-out">
+                  Login
+                </button>
+              </Link>
+              <Link to="/signup">
+                <button className="signup-btn bg-gradient-to-r  text-red-500 font-medium hover:bg-red-100 transition duration-300 ease-in-out border  border-red-500 py-3 px-8 rounded-r-full ">
+                  Signup
+                </button>
+              </Link>
+            </div>
+
             <button
               data-collapse-toggle="navbar-sticky"
               type="button"
@@ -52,41 +54,41 @@ function NavbarHome() {
             </button>
           </div>
           <div
-            class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
+            class="hidden w-full md:flex md:items-center md:justify-between md:w-auto "
             id="navbar-sticky"
           >
-            <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border rounded-lg md:space-x-12 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white da">
+            <ul className="flex flex-col md:flex-row justify-between md:space-x-8 items-center md:items-stretch py-4 px-4 md:px-0">
               <li>
-                <a
-                  href="#"
-                  className="block py-2 px-3 text-[#212177] font-medium  hover:font-bold   md:p-0"
+                <Link
+                  to="#"
+                  className="block text-white px-4 py-2 rounded-2xl hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-400"
                 >
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="block py-2 px-3 text-[#212177] font-medium  hover:font-bold   md:p-0"
+                <Link
+                  to="#"
+                  className="block text-white px-4 py-2 rounded-2xl hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-400"
                 >
-                  AboutUs
-                </a>
+                  About Us
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="block py-2 px-3 text-[#212177] font-medium  hover:font-bold   md:p-0"
+                <Link
+                  to="#"
+                  className="block text-white px-4 py-2 rounded-2xl hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-400"
                 >
                   Features
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="block py-2 px-3 text-[#212177] font-medium  hover:font-bold   md:p-0"
+                <Link
+                  to="#"
+                  className="block text-white px-4 py-2 rounded-2xl hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-400"
                 >
                   Guide
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

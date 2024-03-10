@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axiosClient from "../axios-client.js";
+import { useSelector } from "react-redux";
+import bin from "../assets/bin.png";
+import Alert from "./Alert";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
-  const [newProjectData, setNewProjectData] = useState({
-    title: "",
-    description: "",
-  });
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertType, setAlertType] = useState("danger");
+  const [alertMessage, setAlertMessage] = useState("");
 
   const loadProjects = async () => {
     try {
@@ -23,148 +23,79 @@ const Projects = () => {
     }
   };
 
-  const validateProjectData = (data) => {
-    const errors = {};
-
-    if (!data.title) {
-      errors.title = "Le titre est obligatoire";
-    }
-
-    if (!data.description) {
-      errors.description = "La description est obligatoire";
-    }
-
-    return errors;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const errors = validateProjectData(newProjectData);
-
-    if (Object.keys(errors).length > 0) {
-      setErrors(errors);
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      const response = await axiosClient.post("/projects", newProjectData, {
-        withCredentials: true,
-      });
-      console.log("Projet ajouté avec succès :", response.data);
-      loadProjects();
-    } catch (error) {
-      if (error.response && error.response.status === 500) {
-        console.error("Internal server error:", error.response.data);
-      } else {
-        console.error("Error adding project:", error);
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   useEffect(() => {
     const csrfToken = document.cookie.match(/XSRF-TOKEN=(.+);/)[1];
     axiosClient.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
     loadProjects();
   }, []);
+
   const deleteProject = async (projectId) => {
-    try {
-      await axiosClient.delete(`/projects/${projectId}`, {
-        withCredentials: true,
-      });
-      console.log(`Projet avec l'ID ${projectId} supprimé avec succès`);
-      loadProjects();
-    } catch (error) {
-      console.error(
-        `Erreur lors de la suppression du projet : ${error.message}`
-      );
+    if (
+      window.confirm(
+        "Êtes-vous sûr de vouloir supprimer ce projet ? Cette action est irréversible."
+      )
+    ) {
+      try {
+        await axiosClient.delete(`/projects/${projectId}`, {
+          withCredentials: true,
+        });
+        setAlertType("success");
+        setAlertMessage("Projet supprimé avec succès !");
+        setShowAlert(true);
+        loadProjects();
+      } catch (error) {
+        setAlertType("danger");
+        setAlertMessage("Erreur lors de la suppression du projet.");
+        setShowAlert(true);
+        console.error(
+          `Erreur lors de la suppression du projet : ${error.message}`
+        );
+      }
     }
   };
+
   return (
-    <div className="container mx-auto p-4">
-      <h2 className="text-3xl font-bold mb-4">Liste des Projets</h2>
-      <ul className="list-disc pl-4">
+    <div className="container h-screen mx-auto pt-11 p-8 bg-white dark:bg-gray-900 text-white">
+      <div className="w-80 mb-2">
+        {showAlert && (
+          <Alert
+            type={alertType}
+            message={alertMessage}
+            onClose={() => setShowAlert(false)}
+          />
+        )}
+      </div>
+      <h3 className="dark:text-gray-300 text-gray-600 font-semibold mx-4 mb-8">
+        Tous les projets
+      </h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {Array.isArray(projects) && projects.length > 0 ? (
           projects.map((project) => (
-            <li key={project.id} className="mb-2">
-              <span className="text-lg font-semibold">{project.title}</span> -{" "}
-              {project.description}
-              <div className="mt-2">
-                <button
-                  onClick={() => handleUpdateProject(project.id)}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 mr-2 rounded"
-                >
-                  Mettre à Jour
-                </button>
-                <button
-                  onClick={() => deleteProject(project.id)}
-                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
-                >
-                  Supprimer
-                </button>
+            <div key={project.id} className="mb-4 h-300">
+              <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden h-60 shadow-md  flex flex-col">
+                <div className="p-4 flex-1 overflow-y-auto">
+                  <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
+                    {project.title}
+                  </h2>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm">
+                    {project.description}
+                  </p>
+                </div>
+                <div className="flex justify-end p-4">
+                  <button
+                    onClick={() => deleteProject(project.id)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    Supprimer
+                  </button>
+                </div>
               </div>
-            </li>
+            </div>
           ))
         ) : (
-          <li>Aucun projet trouvé</li>
+          <p>Aucun projet trouvé.</p>
         )}
-      </ul>
-
-      <h2 className="text-2xl font-bold my-4">Ajouter un Projet</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Titre:
-          </label>
-          <input
-            type="text"
-            name="title"
-            value={newProjectData.title}
-            onChange={(e) =>
-              setNewProjectData({
-                ...newProjectData,
-                title: e.target.value,
-              })
-            }
-            className="mt-1 p-2 border rounded-md w-full"
-            error={errors.title}
-          />
-          {errors.title && (
-            <p className="text-red-500 text-sm mt-1">{errors.title}</p>
-          )}
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Description:
-          </label>
-          <textarea
-            name="description"
-            value={newProjectData.description}
-            onChange={(e) =>
-              setNewProjectData({
-                ...newProjectData,
-                description: e.target.value,
-              })
-            }
-            className="mt-1 p-2 border rounded-md w-full"
-            error={errors.description}
-          />
-          {errors.description && (
-            <p className="text-red-500 text-sm mt-1">{errors.description}</p>
-          )}
-        </div>
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-        >
-          {isSubmitting ? "En cours..." : "Ajouter le Projet"}
-        </button>
-      </form>
+      </div>
     </div>
   );
 };

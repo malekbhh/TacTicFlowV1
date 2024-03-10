@@ -9,6 +9,7 @@ use App\Http\Requests\SignupRequest;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Models\Project;
 use App\Models\User;
+use App\Models\AuthorizedUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail; // Importez la classe Mail
 use Laravel\Socialite\Facades\Socialite;
@@ -20,18 +21,29 @@ class AuthController extends Controller
 {
    
     public function signup(SignupRequest $request)
-    {
-        $data = $request->validated();
-        /** @var \App\Models\User $user */
+{
+    $data = $request->validated();
+
+    // Check if the user's email exists in authorized_users table
+    $authorizedUser = AuthorizedUser::where('email', $data['email'])->first();
+
+    if ($authorizedUser) {
+        // User is authorized, create an account in the users table
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'role' => $authorizedUser->role
         ]);
 
         $token = $user->createToken('main')->plainTextToken;
         return response(compact('user', 'token'));
+    } else {
+        // User is not authorized, return an error message
+        return response()->json(['error' => 'You dont have access to create an account.'], 403);
     }
+}
+
 
     public function login(LoginRequest $request)
     {

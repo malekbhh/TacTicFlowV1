@@ -4,7 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\AuthController;
-
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\FormController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -29,7 +30,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-       
+    Route::delete('/users/{user}', [UserController::class, 'destroy']);
+    Route::get('/usersAccount', [UserController::class, 'indexUsers']);
+    Route::delete('/usersAccount/{user}', [UserController::class, 'destroyUsers']);
+
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/UnauthorizedUsers', [UserController::class, 'showUnauth']);
+
+    Route::post('/users', [UserController::class, 'store']);
+    Route::delete('/UnauthorizedUsers/{user}', [UserController::class, 'destroyUnauth']); // Ajout de la route pour supprimer un utilisateur
+    Route::post('/authorizedUsers', [UserController::class, 'authorizeUnauthorizedUser']); 
    });
 
 
@@ -41,3 +51,5 @@ Route::post('/loginwithgoogle', [AuthController::class, 'handleGoogleCallback'])
 
 Route::post('/passwordreset', [AuthController::class, 'passwordReset']);
 Route::post('/newpassword', [AuthController::class, 'newPassword']);
+Route::post('/send-email', [App\Http\Controllers\MailController::class, 'sendEmail']);
+Route::post('/storeUnAuthUser', [UserController::class, 'storeUnAuthUser']);

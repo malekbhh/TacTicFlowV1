@@ -1,56 +1,81 @@
 import React from "react";
 import NavbarHome from "../components/NavbarHome";
-
+import FooterHome from "../components/FooterHome";
+import { Link } from "react-router-dom";
+import FormAccessSignUp from "../components/FormAccessSignUp";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import FeatureCard from "../components/FeatureCard";
+import Login from "./Login";
+import Signup from "./Signup";
 function Home() {
   return (
-    <div className="">
-      <NavbarHome />
-
-      <div className="relative translate-y-48  -translate-x-11">
-        <svg
-          height="800"
-          width="1679"
-          viewBox="0 0 1679 840"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M2 778.267C104.185 689.267 419.554 338.165 709.24 509.766C1071.35 724.267 1296.12 986.268 1550.73 732.767C1805.33 479.266 1623.25 120.264 1433.97 43.7638C1282.54 -17.4365 1148.67 3.59694 1100.66 21.7637"
-            stroke="white"
-            stroke-width="5"
-            stroke-dasharray="20 20"
-          />
-        </svg>
+    <div className="flex flex-col">
+      <NavbarHome className="shadow-md" />
+      <div className="flex  mb-16 flex-col md:flex-row justify-around  ml-4 items-center">
+        <div className="-translate-y-8 mr-12">
+          {" "}
+          <img
+            className="h-auto md:ml-6  w-full md:w-[800px] mt-5 md:mt-0"
+            alt="image"
+            src="/img2.png"
+          />{" "}
+        </div>
+        <div className="text-white md:w-1/2 px-8 py-16 flex flex-col justify-center">
+          <h1 className="text-4xl font-bold leading-tight">
+            Empower Your Projects
+          </h1>
+          <p className="text-2xl font-medium mt-4">
+            with{" "}
+            <span className="text-4xl font-bold text-indigo-400">
+              TacticFlow
+            </span>
+          </p>
+          <p className="text-xl mt-4 text-gray-200">
+            Organize, collaborate, and track your projects with ease.
+          </p>
+          <div>
+            <button className="bg-white mr-4   text-indigo-500 hover:text-white  hover:shadow-lg  ease-in-ou hover:bg-indigo-700 font-bold py-2 mt-6 px-4 rounded-full transition duration-300 focus:ring-4 focus:ring-indigo-300 focus:outline-none">
+              Boost Your Project Success{" "}
+            </button>{" "}
+            <Link to="/login">
+              <FontAwesomeIcon icon={faArrowRight} ml-1 />
+              {/* Replace with your desired icon */}
+              <button className="bg-indigo-500 ml-2    hover:shadow-lg  ease-in-ou hover:bg-indigo-700 text-white font-bold py-2 mt-6 px-4 rounded-full transition duration-300 focus:ring-4 focus:ring-indigo-300 focus:outline-none">
+                Get Started
+              </button>
+            </Link>
+          </div>
+        </div>
       </div>
 
-      <div className="text-white absolute text-3xl w-846 h-155 adivsolute my-0 mx-[!important] top-220 left-[93px] leading-[80px] inline-block whitespace-pre-wrap [text-shadow:-5px_10px_4px_rgba(0,_0,_0,_0.25)] mq450:text-[29px] mq450:leading-[48px] mq1050:text-[38px] mq1050:leading-[64px] font-bold">
-        <p className="m-0">{`Empower Your Projects, Streamline  `}</p>
-        <p className="m-0">
-          <span>{`with `}</span>
-          <span className="text-50px">TacticFlow</span>
-        </p>
-
-        <p className="text-lg mt-10 text-shadow-none">Take the first step</p>
-        <input
-          className="h-10 rounded-2xl text-sm  w-80 text-dimgray px-4 font-normal"
-          placeholder="Email"
+      <FormAccessSignUp />
+      <div className="features flex flex-wrap justify-center items-center my-40">
+        <FeatureCard
+          title="Project Organization Hub"
+          description="A visual and intuitive platform for organizing tasks into boards, lists, and cards."
+          icon="fas fa-tasks"
+          image="/consumer-1@2x.png" // Replace with the path to your image
         />
 
-        <button className=" h-10 bg-[#FFC107] text-[#212177]  items-center text-xl w-40 hover:text-white pb-1  text-midnightblue  justify-center font-medium m-6 rounded-xl  shadow-[-6px_8px_10px_rgba(0,_0,_0,_0.4)]">
-          Sign up
-        </button>
+        <FeatureCard
+          title="Real-time Project Dashboard"
+          description="A comprehensive dashboard that provides real-time insights into the progress of each project."
+          icon="fas fa-chart-line"
+          image="/graphic-1@2x.png" // Replace with the path to your image
+        />
+
+        <FeatureCard
+          title="Team Collaboration Hub"
+          description="A comprehensive dashboard that provides real-time insights into the progress."
+          icon="fas fa-users"
+          image="/network-1@2x.png" // Replace with the path to your image
+        />
       </div>
 
-      <div className=" absolute top-80 right-0  flex flex-row gap-5 px-40">
-        <img className="h-80" src="/homepic.png" alt="homepic" />
-      </div>
-      <img
-        className="w-126 h-144.9 absolute my-0 mx-[!important] top-[125px] right-[520px] object-contain z-[3]"
-        loading="eager"
-        alt=""
-        src="/group@2x.png"
-      />
+      <FooterHome />
     </div>
   );
 }
+
 export default Home;

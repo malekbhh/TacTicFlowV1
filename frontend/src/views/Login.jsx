@@ -7,6 +7,8 @@ import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { auth, provider } from "../firebase.js";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 function Login() {
   const emailRef = createRef();
@@ -15,6 +17,7 @@ function Login() {
   const [message, setMessage] = useState(null);
   const [value, setValue] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const navigate = useNavigate();
 
   const handleGoogleLogin = async () => {
     const auth = getAuth();
@@ -32,7 +35,6 @@ function Login() {
         // Set user and token
         setUser(response.data.user);
         setToken(response.data.token);
-
         setRedirect(true);
         window.location.reload();
       } else {
@@ -60,6 +62,14 @@ function Login() {
       .then(({ data }) => {
         setUser(data.user);
         setToken(data.token);
+        localStorage.setItem("userRole", String(data.user.role));
+        const userrole = data.user.role;
+        if (userrole === "admin") {
+          navigate("/userAdmin"); // Correction ici
+        } else {
+          console.log("trueeeee");
+          navigate("/user"); // Correction ici
+        }
       })
       .catch((err) => {
         const response = err.response;

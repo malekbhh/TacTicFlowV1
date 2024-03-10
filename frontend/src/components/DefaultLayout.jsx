@@ -3,10 +3,20 @@ import { Navigate, Outlet, Link } from "react-router-dom";
 import { useStateContext } from "../context/ContextProvider";
 import axiosClient from "../axios-client.js";
 import { useEffect } from "react";
+import AddEditBoardModal from "../modals/AddEditBoardModal.jsx";
+import HeaderDropdown from "./HeaderDropdown.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser, faTasks } from "@fortawesome/free-solid-svg-icons";
+
 const DefaultLayout = () => {
   const { user, token, setUser, setToken } = useStateContext();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-
+  const [openDropdown, setOpenDropdown] = useState(false);
+  const [boardModalOpen, setBoardModalOpen] = useState(false);
+  const [boardType, setBoardType] = useState("add");
+  const boards = useSelector((state) => state.boards);
+  const board = boards.find((board) => board.isActive);
   useEffect(() => {
     if (token && user) {
       axiosClient.get("/user").then(({ data }) => {
@@ -29,11 +39,11 @@ const DefaultLayout = () => {
   };
 
   if (!token || !user) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/home" />;
   }
   return (
     <div>
-      <nav className="fixed top-0 z-50 w-full  border-b  bg-gray-800 border-gray-700">
+      <nav className="fixed top-0 z-50 w-full border-b bg-white dark:bg-gray-900  dark:border-gray-700">
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start rtl:justify-end">
@@ -61,34 +71,50 @@ const DefaultLayout = () => {
                   ></path>
                 </svg>
               </button>
-              <a
-                href="https://tac-tic.net/"
-                className="flex items-center space-x-3 rtl:space-x-reverse"
-              >
+              <a href="https://tac-tic.net/" className="flex items-center ">
                 <img
                   src="/logo2.png"
-                  className="h-12 md:h-8 lg:h-12"
+                  className="h-12 mr-1 md:h-8 lg:h-12"
                   alt="TacTicFlowLogo"
                 />
                 <span
-                  className={`self-center text-2xl font-semibold text-white whitespace-nowrap ${
+                  className={` text-2xl  font-bold font-inherit mt-1 dark:text-white text-[#212177]  ${
                     typeof window !== "undefined" && window.innerWidth < 600
                       ? "text-lg"
                       : ""
                   }`}
                   style={{
-                    letterSpacing: window.innerWidth < 600 ? "2px" : "5px",
+                    letterSpacing: window.innerWidth < 600 ? "2px" : "4px",
                   }}
                 >
                   actiwFlow
                 </span>
               </a>
             </div>
-            <div className="flex items-center">
-              <span className="text-white text-xs md:text-lg ml-2">
-                {" "}
-                {user.name} &nbsp; &nbsp;
-              </span>
+
+            {/* right side  */}
+            <div className="flex space-x-4 items-center md:space-x-6">
+              <div className="flex space-x-4 items-center md:space-x-6">
+                <button
+                  className="bg-midnightblue py-2 px-4 rounded-full 
+        text-white text-base font-semibold hover:opacity-80
+        duration-200 button hidden md:block"
+                  onClick={() => {
+                    setBoardModalOpen((state) => !state);
+                  }}
+                >
+                  +Add New Board
+                </button>
+                <button
+                  className="button p-1 px-3 md:hidden"
+                  onClick={() => {
+                    setOpenAddEditTask((state) => !state);
+                  }}
+                >
+                  +
+                </button>
+              </div>
+
               <div className="flex items-center ms-3">
                 <div>
                   <button
@@ -157,9 +183,9 @@ const DefaultLayout = () => {
 
       <aside
         id="logo-sidebar"
-        className="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+        className="fixed top-0 left-0 bg-white dark:bg-gray-900 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full  border-r border-gray-200 sm:translate-x-0  dark:border-gray-700"
       >
-        <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+        <div className="h-full px-3 pb-4 overflow-y-auto  bg-white dark:bg-gray-900">
           <ul className="space-y-2 font-medium">
             <li>
               <Link to="/projects">
@@ -215,32 +241,28 @@ const DefaultLayout = () => {
                 href="#"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
-                <svg
-                  className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 20"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-
+                <FontAwesomeIcon
+                  icon={faTasks}
+                  className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                />
                 <span className="flex-1 ms-3 whitespace-nowrap">Progress</span>
               </a>
             </li>
+
             <li>
               <Link
                 to="/user"
-                className="block py-2 text-white hover:underline"
+                className="flex items-center p-2 text-gray-900 rounded-lg
+    dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
-                Users
+                <FontAwesomeIcon
+                  icon={faUser}
+                  className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                />
+                <span className="flex-1 ms-3 whitespace-nowrap">User</span>
               </Link>
             </li>
+
             <li>
               <a
                 href="#"
@@ -261,19 +283,36 @@ const DefaultLayout = () => {
                     d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"
                   />
                 </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">Sign Out</span>
+                <button onClick={onLogout}>
+                  <span className="flex-1 ms-3 whitespace-nowrap">
+                    Sign Out
+                  </span>
+                </button>
               </a>
+            </li>
+            <li>
+              <div className="fixed bottom-0 left-0 w-full">
+                <HeaderDropdown
+                  setBoardModalOpen={setBoardModalOpen}
+                  setOpenDropdown={setOpenDropdown}
+                />
+              </div>
             </li>
           </ul>
         </div>
       </aside>
 
-      <div className="p-4 sm:ml-64">
-        <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-20">
-          <div className=" mb-4">
-            <div className="flex items-center justify-center pt-6 rounded  ">
-              <Outlet />
-            </div>
+      <div className="sm:ml-64">
+        <div className="  rounded-lg dark:border-gray-700 mt-10">
+          <div className="flex items-center justify-center pt-6 rounded  ">
+            {boardModalOpen && (
+              <AddEditBoardModal
+                type={boardType}
+                setBoardModalOpen={setBoardModalOpen}
+              />
+            )}
+
+            <Outlet />
           </div>
         </div>
       </div>

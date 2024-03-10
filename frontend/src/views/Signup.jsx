@@ -69,6 +69,12 @@ function Signup() {
       })
       .catch((err) => {
         const response = err.response;
+        if (response && response.status === 403) {
+          setErrors({
+            message: "You don't have access to create an account.",
+          });
+        }
+
         if (response && response.status === 422) {
           setErrors(response.data.errors);
         }
@@ -137,35 +143,35 @@ function Signup() {
               type="password"
             />
             {errors && (
-              <div className="text-red-500 rounded-lg   flex items-center justify-between">
-                <div className="flex items-center">
-                  <button
-                    className="p-2 rounded-md  hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
-                    onClick={() => setErrors(null)}
+              <div className="text-red-500 rounded-lg   flex items-center mt-4">
+                <button
+                  className="p-2 rounded-md  hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  onClick={() => setErrors(null)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    <svg
-                      text-red-500
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                  <div className="flex flex-col items-center">
-                    {Object.keys(errors).map((key) => (
-                      <p className="font-medium text-sm" key={key}>
-                        {errors[key][0]}
-                      </p>
-                    ))}
-                  </div>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+                {errors.message && (
+                  <p className="font-medium text-sm">{errors.message}</p>
+                )}{" "}
+                <div className="flex flex-col items-center">
+                  {Object.keys(errors).map((key) => (
+                    <p className="font-medium text-sm " key={key}>
+                      {errors[key][0]}
+                    </p>
+                  ))}{" "}
                 </div>
               </div>
             )}

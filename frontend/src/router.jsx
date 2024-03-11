@@ -13,6 +13,7 @@ import NewPassword from "./views/NewPassword.jsx";
 import Projects from "./components/Projects.jsx";
 import UserAdmin from "./views/UserAdmin.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import FormAccessSignUp from "./components/FormAccessSignUp.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -64,6 +65,10 @@ const router = createBrowserRouter([
       {
         path: "/newpassword",
         element: <NewPassword />,
+      },
+      {
+        path: "/formAccess",
+        element: <FormAccessSignUp />,
       },
     ],
   },

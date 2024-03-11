@@ -6,8 +6,7 @@ import FormAccessSignUp from "../components/FormAccessSignUp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import FeatureCard from "../components/FeatureCard";
-import Login from "./Login";
-import Signup from "./Signup";
+
 function Home() {
   return (
     <div className="flex flex-col">
@@ -38,7 +37,7 @@ function Home() {
             <button className="bg-white mr-4   text-indigo-500 hover:text-white  hover:shadow-lg  ease-in-ou hover:bg-indigo-700 font-bold py-2 mt-6 px-4 rounded-full transition duration-300 focus:ring-4 focus:ring-indigo-300 focus:outline-none">
               Boost Your Project Success{" "}
             </button>{" "}
-            <Link to="/login">
+            <Link to="/formAccess">
               <FontAwesomeIcon icon={faArrowRight} ml-1 />
               {/* Replace with your desired icon */}
               <button className="bg-indigo-500 ml-2    hover:shadow-lg  ease-in-ou hover:bg-indigo-700 text-white font-bold py-2 mt-6 px-4 rounded-full transition duration-300 focus:ring-4 focus:ring-indigo-300 focus:outline-none">
@@ -49,8 +48,7 @@ function Home() {
         </div>
       </div>
 
-      <FormAccessSignUp />
-      <div className="features flex flex-wrap justify-center items-center my-40">
+      <div className="features mb-64 flex flex-wrap justify-center items-center mt-40">
         <FeatureCard
           title="Project Organization Hub"
           description="A visual and intuitive platform for organizing tasks into boards, lists, and cards."

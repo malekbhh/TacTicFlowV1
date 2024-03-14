@@ -14,6 +14,8 @@ import Projects from "./components/Projects.jsx";
 import UserAdmin from "./views/UserAdmin.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import FormAccessSignUp from "./components/FormAccessSignUp.jsx";
+import Dashboardd1 from "./views/Dashboardd1.jsx";
+import ProjectDetails from "./components/ProjectDetails.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -28,6 +30,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute allowedRoles={["chef", "user", "member", "admin"]}>
             <Projects />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/project/:projectId",
+        element: (
+          <ProtectedRoute allowedRoles={["chef", "user", "member", "admin"]}>
+            <ProjectDetails />
           </ProtectedRoute>
         ),
       },
@@ -75,6 +85,10 @@ const router = createBrowserRouter([
   {
     path: "*",
     element: <NotFound />,
+  },
+  {
+    path: "dash",
+    element: <Dashboardd1 />,
   },
 ]);
 

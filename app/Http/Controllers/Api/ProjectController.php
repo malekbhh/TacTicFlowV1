@@ -17,16 +17,13 @@ class ProjectController extends Controller
         return response()->json($projects);
     }
 
-    public function show(Request $request, Project $project)
+    public function show($projectId)
     {
-        $user = Auth::user();
-
-        if ($project->user_id !== $user->id) {
-            return response()->json(['error' => 'Forbidden'], 403);
-        }
-
+        $project = Project::findOrFail($projectId);
         return response()->json($project);
     }
+    
+    
 
     public function store(Request $request)
     {
@@ -71,5 +68,50 @@ class ProjectController extends Controller
 
         // Répondre avec un statut de succès
         return response()->json(['message' => 'Projet supprimé avec succès']);
+    }
+    public function showProject(Request $request, $idOrProject)
+    {
+        $user = Auth::user();
+    
+        if ($idOrProject instanceof Project) {
+            $project = $idOrProject;
+        } else {
+            $project = Project::where('title', $idOrProject)->first();
+        }
+    
+        if (!$project) {
+            return response()->json(['error' => 'Project not found'], 404);
+        }
+    
+        if ($project->user_id !== $user->id) {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+    
+        return response()->json($project);
+    }
+ 
+    
+    public function addTask(Request $request, Project $project)
+    {
+        $user = Auth::user();
+
+        // Vérifiez si l'utilisateur est authentifié
+        if (!$user) {
+            return response()->json(['error' => 'Unauthenticated'], 401);
+        }
+    
+        // Vérifiez si l'utilisateur a le droit d'ajouter une tâche à ce projet
+        if ($project->user_id !== $user->id) {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+    
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+    
+        // Ajoutez la tâche au projet
+        $task = $project->tasks()->create($validatedData);
+    
+        return response()->json($task, 201);
     }
 }

@@ -24,4 +24,14 @@ class Project extends Model
     {
         return $this->belongsTo(User::class);
     }
+    // Project.php
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+    public function cards()
+    {
+        return $this->hasMany(Card::class);
+    }
 }

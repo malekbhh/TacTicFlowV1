@@ -27,9 +27,9 @@ function HeaderDropdown({ setOpenDropdown, setBoardModalOpen }) {
         setOpenDropdown(false);
       }}
     >
-      <div className=" shadow-sm shadow-[#364e7e1al] rounded-xl">
+      <div className=" shadow-sm shadow-[#364e7e1al] rounded-2xl">
         <div>
-          <div className="mx-2 p-4 space-x-2  flex justify-center items-center rounded-lg">
+          <div className="mx-2 p-4 space-x-2  flex justify-center items-center rounded-2xl">
             <img className="h-5" src={lightIcon} alt="lightmodeicon" />
             <Switch
               checked={darkSide}

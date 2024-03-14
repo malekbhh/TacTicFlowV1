@@ -3,7 +3,7 @@ import axiosClient from "../axios-client.js";
 import { useSelector } from "react-redux";
 import bin from "../assets/bin.png";
 import Alert from "./Alert";
-
+import { Link } from "react-router-dom";
 const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
@@ -72,24 +72,29 @@ const Projects = () => {
         {Array.isArray(projects) && projects.length > 0 ? (
           projects.map((project) => (
             <div key={project.id} className="mb-4 h-300">
-              <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden h-60 shadow-md  flex flex-col">
-                <div className="p-4 flex-1 overflow-y-auto">
-                  <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
-                    {project.title}
-                  </h2>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm">
-                    {project.description}
-                  </p>
+              <Link to={`/project/${project.id}`}>
+                <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden h-60 shadow-md  flex flex-col">
+                  <div className="p-4 flex-1 overflow-y-auto">
+                    <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
+                      {project.title}
+                    </h2>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm">
+                      {project.description}
+                    </p>
+                  </div>
+                  <div className="flex justify-end p-4">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault(); // Prevent the Link from triggering
+                        deleteProject(project.id);
+                      }}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      Supprimer
+                    </button>
+                  </div>
                 </div>
-                <div className="flex justify-end p-4">
-                  <button
-                    onClick={() => deleteProject(project.id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    Supprimer
-                  </button>
-                </div>
-              </div>
+              </Link>
             </div>
           ))
         ) : (

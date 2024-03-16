@@ -69,12 +69,7 @@ class UserController extends Controller
     
         $user->delete();
     
-        // Get the minimum ID from the remaining authorized users
-        $minId = User::min('id');
-    
-        // Update IDs sequentially
-        User::where('id', '>', $idBeforeDeletion)->decrement('id');
-    
+      
         return response("", 204);
     }
     public function destroy(AuthorizedUser $user)
@@ -124,8 +119,6 @@ public function storeUnAuthUser(StoreUnAuthoUserRequest $request)
     $validatedData = $request->validated();
     try {
         $unauthorizedUser = UnAuthorizedUser::create($validatedData);
-
-        // ... (Optional) Send email notification using sendEmailNotification method
 
         return response()->json([
             'message' => 'User created successfully',

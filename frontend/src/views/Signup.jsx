@@ -80,20 +80,21 @@ function Signup() {
         }
       });
   };
+
   return (
-    <div className="flex items-center justify-center">
+    <div className="requestbg flex items-center justify-center">
       <div></div>
       <div className=" z-10  flex min-h-screen overflow-hidden justify-center items-center gap-52 ">
-        <div className=" px-8 pt-4 pb-8  h-full bg-white w-90  rounded-2xl flex flex-col gap-1 items-center justify-center ">
+        <div className=" px-8 pt-4 pb-8  h-full shadow-md shadow-slate-600 bg-white bg-opacity-5  rounded-2xl flex flex-col gap-1 items-center justify-center  ">
           <img className="h-16" src="/logo2.png" alt="logo" />
 
-          <p className=" mb-4  text-midnightblue font-medium flex items-center justify-center text-xl ">
+          <p className=" mb-4 text-gray-200 font-semibold flex items-center justify-center text-xl ">
             Sign up into your account
           </p>
 
           <button
             onClick={handleGoogleLogin}
-            className="bg-gray-200  h-10  flex items-center w-80  justify-center rounded-xl"
+            className="bg-white bg-opacity-50 h-10  flex items-center w-80  justify-center rounded-xl"
           >
             <p className="flex gap-1  text-gray-500">
               <img
@@ -118,32 +119,32 @@ function Signup() {
             onSubmit={onSubmit}
           >
             <input
-              className=" w-80 border border-gray-300 text-gray-500 rounded-xl px-5 py-2"
+              className="shadow-md shadow-slate-600 bg-transparent  rounded-xl  px-4 py-3 mt-2  border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
               ref={nameRef}
               placeholder="FullName"
               type="text "
             />
 
             <input
-              className=" w-80 border border-gray-300 text-gray-500 rounded-xl px-5 py-2"
+              className="shadow-md shadow-slate-600 bg-transparent  rounded-xl  px-4 py-3 mt-2  border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
               placeholder="Enter your email"
               ref={emailRef}
               type="email"
             />
             <input
-              className=" w-80 border border-gray-300 text-gray-500 rounded-xl px-5 py-2"
+              className="shadow-md shadow-slate-600 bg-transparent  rounded-xl  px-4 py-3 mt-2  border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
               ref={passwordRef}
               placeholder="Password"
               type="password"
             />
             <input
-              className=" w-80 border border-gray-300 text-gray-500 rounded-xl px-5 py-2"
+              className=" w-80 shadow-md shadow-slate-600 bg-transparent  rounded-xl  px-4 py-3 mt-2  border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 "
               ref={passwordConfirmationRef}
               placeholder="Password Confirmation"
               type="password"
             />
             {errors && (
-              <div className="text-red-500 rounded-lg   flex items-center mt-4">
+              <div className="text-red-700 rounded-lg   flex items-center mt-4">
                 <button
                   className="p-2 rounded-md  hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
                   onClick={() => setErrors(null)}
@@ -175,17 +176,20 @@ function Signup() {
                 </div>
               </div>
             )}
-            <button className="btn btn-block h-8  bg-[#212177]   text-white  items-center px-4 w-auto pb-1  justify-center font-medium mb-2 mt-6 rounded-xl  ">
+            <button
+              style={{
+                background:
+                  "linear-gradient(234.84deg, #212177 27.56%, #ce3fa5)",
+              }}
+              className="btn btn-block h-8  bg-[#212177]   text-white  items-center px-4 w-auto pb-1  justify-center font-medium mb-2 mt-6 rounded-xl  "
+            >
               Signup
             </button>
           </form>
 
           <p className=" text-sm text-gray-400">
             Already have an account?{" "}
-            <Link
-              to={"/login"}
-              className="font-bold text-gray-500 text-midnightblue"
-            >
+            <Link to={"/login"} className="font-semibold text-midnightblue">
               Login
             </Link>
           </p>

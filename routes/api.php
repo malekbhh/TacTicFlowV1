@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\MailController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -32,13 +34,14 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/user', function (Request $request) {
         return $request->user();
     });
-    Route::delete('/users/{user}', [UserController::class, 'destroy']);
+    Route::delete('/users/{user}', [UserController::class, 'destroyUsers']);
     Route::get('/users', [UserController::class, 'index']);
-
+    Route::delete('/usersAccount/{user}', [UserController::class, 'destroyUsers']);
+    Route::get('/usersAccount', [UserController::class, 'indexUsers']);
     // Routes pour gérer les utilisateurs non autorisés
-    Route::get('/unauthorized-users', [UserController::class, 'showUnauth']);
-    Route::post('/unauthorized-users', [UserController::class, 'authorizeUnauthorizedUser']);
-    Route::delete('/unauthorized-users/{user}', [UserController::class, 'destroyUnauth']);
+    Route::get('/UnauthorizedUsers', [UserController::class, 'showUnauth']);
+    Route::post('/UnauthorizedUsers', [UserController::class, 'authorizeUnauthorizedUser']);
+    Route::delete('/UnauthorizedUsers/{user}', [UserController::class, 'destroyUnauth']);
 
     // Route de déconnexion
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -51,4 +54,4 @@ Route::post('/login-with-google', [AuthController::class, 'handleGoogleCallback'
 Route::post('/password-reset', [AuthController::class, 'passwordReset']);
 Route::post('/new-password', [AuthController::class, 'newPassword']);
 Route::post('/send-email', [MailController::class, 'sendEmail']);
-Route::post('/store-unauthorized-user', [UserController::class, 'storeUnAuthUser']);
+Route::post('/storeUnAuthUser', [UserController::class, 'storeUnAuthUser']);

@@ -25,10 +25,14 @@ function AddEditBoardModal({ setBoardModalOpen, type, affiche, setAffiche }) {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   useEffect(() => {
-    const csrfToken = document.cookie.match(/XSRF-TOKEN=(.+);/)[1];
-    axiosClient.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
-    loadProjects();
+    const xsrfTokenMatch = document.cookie.match(/XSRF-TOKEN=(.+);/);
+    const csrfToken = xsrfTokenMatch ? xsrfTokenMatch[1] : null;
+    if (csrfToken) {
+      axiosClient.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+      loadProjects();
+    }
   }, []);
+
   const onChange = (id, newValue) => {
     setNewColumns((prevState) => {
       const newState = [...prevState];

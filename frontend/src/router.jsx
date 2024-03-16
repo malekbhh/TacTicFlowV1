@@ -16,6 +16,7 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import FormAccessSignUp from "./components/FormAccessSignUp.jsx";
 import Dashboardd1 from "./views/Dashboardd1.jsx";
 import ProjectDetails from "./components/ProjectDetails.jsx";
+import DefaultLayoutAdmin from "./components/DefaultLayoutAdmin.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -89,6 +90,10 @@ const router = createBrowserRouter([
   {
     path: "dash",
     element: <Dashboardd1 />,
+  },
+  {
+    path: "def",
+    element: <DefaultLayoutAdmin />,
   },
 ]);
 

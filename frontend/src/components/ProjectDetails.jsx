@@ -78,9 +78,9 @@ const ProjectDetails = () => {
   }, [projectId]);
 
   return (
-    <div className="container mx-auto pt-11 px-8 h-screen bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white">
+    <div className="container mx-auto pt-11 px-8 h-screen  text-gray-800 dark:text-white">
       {project ? (
-        <div className="bg-white dark:bg-gray-800 rounded-lg ">
+        <div className="bg-white  rounded-lg ">
           <div className="p-6">
             <h2 className="text-3xl font-semibold text-gray-800 dark:text-white mb-4">
               {project.title}

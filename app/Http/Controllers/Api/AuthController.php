@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Mail; // Importez la classe Mail
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Mail\Mailer;
+use Illuminate\Support\Facades\DB; // Ajout de l'utilisation de la classe DB
+use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\Mail\Message;
 use Laravel\Socialite\Contracts\User as SocialiteUser;
 class AuthController extends Controller
@@ -59,7 +61,8 @@ class AuthController extends Controller
         $token = $user->createToken('main')->plainTextToken;
         return response(compact('user', 'token'));
     }
-
+ 
+    
     public function logout(Request $request)
     {
         /** @var \App\Models\User $user */

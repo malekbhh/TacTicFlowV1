@@ -9,8 +9,10 @@ const Projects = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertType, setAlertType] = useState("danger");
   const [alertMessage, setAlertMessage] = useState("");
-
+  const [isLoadingProjects, setIsLoadingProjects] = useState(true);
+  const [loadProjectsError, setLoadProjectsError] = useState(null);
   const loadProjects = async () => {
+    setIsLoadingProjects(true);
     try {
       const response = await axiosClient.get("/projects", {
         headers: {
@@ -18,15 +20,24 @@ const Projects = () => {
         },
       });
       setProjects(response.data);
+      setLoadProjectsError(null); // Clear any previous errors
     } catch (error) {
       console.error("Erreur lors du chargement des projets :", error);
+      setLoadProjectsError(
+        "An error occurred while loading projects. Please try again later."
+      );
+    } finally {
+      setIsLoadingProjects(false);
     }
   };
 
   useEffect(() => {
-    const csrfToken = document.cookie.match(/XSRF-TOKEN=(.+);/)[1];
-    axiosClient.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
-    loadProjects();
+    const xsrfTokenMatch = document.cookie.match(/XSRF-TOKEN=(.+);/);
+    const csrfToken = xsrfTokenMatch ? xsrfTokenMatch[1] : null;
+    if (csrfToken) {
+      axiosClient.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+      loadProjects();
+    }
   }, []);
 
   const deleteProject = async (projectId) => {
@@ -68,39 +79,45 @@ const Projects = () => {
       <h3 className="dark:text-gray-300 text-gray-600 font-semibold mx-4 mb-8">
         Tous les projets
       </h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {Array.isArray(projects) && projects.length > 0 ? (
-          projects.map((project) => (
-            <div key={project.id} className="mb-4 h-300">
-              <Link to={`/project/${project.id}`}>
-                <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden h-60 shadow-md  flex flex-col">
-                  <div className="p-4 flex-1 overflow-y-auto">
-                    <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
-                      {project.title}
-                    </h2>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm">
-                      {project.description}
-                    </p>
+      {loadProjectsError ? (
+        <p className="text-red-500">{loadProjectsError}</p>
+      ) : isLoadingProjects ? (
+        <p>Loading projects...</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          {Array.isArray(projects) && projects.length > 0 ? (
+            projects.map((project) => (
+              <div key={project.id} className="mb-4 h-300">
+                <Link to={`/project/${project.id}`}>
+                  <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden h-60 shadow-md  flex flex-col">
+                    <div className="p-4 flex-1 overflow-y-auto">
+                      <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
+                        {project.title}
+                      </h2>
+                      <p className="text-gray-600 dark:text-gray-300 text-sm">
+                        {project.description}
+                      </p>
+                    </div>
+                    <div className="flex justify-end p-4">
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault(); // Prevent the Link from triggering
+                          deleteProject(project.id);
+                        }}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        Supprimer
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex justify-end p-4">
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault(); // Prevent the Link from triggering
-                        deleteProject(project.id);
-                      }}
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      Supprimer
-                    </button>
-                  </div>
-                </div>
-              </Link>
-            </div>
-          ))
-        ) : (
-          <p>Aucun projet trouvé.</p>
-        )}
-      </div>
+                </Link>
+              </div>
+            ))
+          ) : (
+            <p>Aucun projet trouvé.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };

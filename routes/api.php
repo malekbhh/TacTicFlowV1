@@ -20,9 +20,9 @@ use App\Http\Controllers\MailController;
 */
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/projects/{project}/tasks', [TaskController::class, 'addTask']);
-    Route::get('/tasks/{projectId}', [TaskController::class, 'getTasksByProjectId']);
-    Route::delete('/tasks/{taskId}', [TaskController::class, 'deleteTask']);
+    Route::get('/projects/{projectId}/tasks', [TaskController::class, 'getTasksByProjectId']);
+    Route::post('/projects/{projectId}/tasks', [TaskController::class, 'createTask']);
+    Route::post('/tasks/{taskId}/status', [TaskController::class, 'updateTaskStatus']);
     // Routes pour les projets
     Route::get('/projects', [ProjectController::class, 'index']);
     Route::post('/projects', [ProjectController::class, 'store']);
@@ -34,7 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/user', function (Request $request) {
         return $request->user();
     });
-    Route::delete('/users/{user}', [UserController::class, 'destroyUsers']);
+    Route::delete('/users/{user}', [UserController::class, 'destroy']);
     Route::get('/users', [UserController::class, 'index']);
     Route::delete('/usersAccount/{user}', [UserController::class, 'destroyUsers']);
     Route::get('/usersAccount', [UserController::class, 'indexUsers']);
@@ -42,6 +42,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/UnauthorizedUsers', [UserController::class, 'showUnauth']);
     Route::post('/UnauthorizedUsers', [UserController::class, 'authorizeUnauthorizedUser']);
     Route::delete('/UnauthorizedUsers/{user}', [UserController::class, 'destroyUnauth']);
+    Route::post('/users', [UserController::class, 'store']);
+
 
     // Route de déconnexion
     Route::post('/logout', [AuthController::class, 'logout']);

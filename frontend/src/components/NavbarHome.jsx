@@ -17,7 +17,7 @@ function NavbarHome() {
           <div class="flex md:order-2   space-x-3 md:space-x-0 rtl:space-x-reverse">
             <div className="button-container flex flex-col md:flex-row items-center space-y-4 md:space-y-0">
               <Link to="/login">
-                <button className="login-btn translate-x-7 bg-gradient-to-r from-red-500 to-red-700 py-2.5 px-6 rounded-full text-white font-medium shadow-md hover:shadow-lg transition duration-300 ease-in-out">
+                <button className="login-btn translate-x-7 bg-[#F35F34] py-2.5 px-6 rounded-full text-white font-medium shadow-md hover:shadow-lg transition duration-300 ease-in-out">
                   Login
                 </button>
               </Link>

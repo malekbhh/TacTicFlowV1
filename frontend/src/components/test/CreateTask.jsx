@@ -35,7 +35,7 @@ function CreateTask({ projectId, setTasks }) {
         value={taskName}
         onChange={(e) => setTaskName(e.target.value)}
         placeholder="Enter task name"
-        className="border-2 border-gray-300 rounded-md p-2 mr-2 focus:outline-none"
+        className="border-2  border-gray-300 rounded-md p-2 mr-2 focus:outline-none"
       />
       <button
         onClick={handleCreateTask}

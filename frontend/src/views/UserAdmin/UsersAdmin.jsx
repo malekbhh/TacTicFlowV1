@@ -46,7 +46,7 @@ function UsersAdmin() {
   }, []);
 
   return (
-    <div className="flex flex-col w-full my-10">
+    <div className="flex flex-col  w-full my-10">
       <h1 className="text-2xl pl-4 font-bold ">Users </h1>
       <div className="user-table mt-6 card animated fadeInDown">
         <table className="w-full border shadow-md rounded-lg overflow-hidden">

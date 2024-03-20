@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     use HasFactory;
-    protected $fillable = ['column_c', 'title', 'description', 'user_id'];
+    protected $fillable = ['column_c', 'title', 'description','deadline', 'user_id'];
 
     public function timestamps()
     {

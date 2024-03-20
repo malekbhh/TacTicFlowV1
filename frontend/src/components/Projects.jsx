@@ -66,7 +66,7 @@ const Projects = () => {
   };
 
   return (
-    <div className="container h-screen mx-auto pt-11 p-8 bg-white dark:bg-gray-900 text-white">
+    <div className="container h-screen mx-auto pt-11 p-8  dark:bg-gray-900 text-white">
       <div className="w-80 mb-2">
         {showAlert && (
           <Alert
@@ -77,7 +77,7 @@ const Projects = () => {
         )}
       </div>
       <h3 className="dark:text-gray-300 text-gray-600 font-semibold mx-4 mb-8">
-        Tous les projets
+        All projects
       </h3>
       {loadProjectsError ? (
         <p className="text-red-500">{loadProjectsError}</p>

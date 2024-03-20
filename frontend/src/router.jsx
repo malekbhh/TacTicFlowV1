@@ -16,14 +16,23 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import FormAccessSignUp from "./components/FormAccessSignUp.jsx";
 import Dashboardd1 from "./views/Dashboardd1.jsx";
 import ProjectDetails from "./components/ProjectDetails.jsx";
+import Profile from "./components/Profile.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <DefaultLayout />,
     children: [
       {
+        path: "/",
+        element: <User />,
+      },
+      {
         path: "/user",
         element: <User />,
+      },
+      {
+        path: "/profile",
+        element: <Profile />,
       },
       {
         path: "/projects",

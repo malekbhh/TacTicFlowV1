@@ -7,24 +7,25 @@ import AddEditBoardModal from "../modals/AddEditBoardModal.jsx";
 import HeaderDropdown from "./HeaderDropdown.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faTasks } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faTasks, faHome } from "@fortawesome/free-solid-svg-icons";
 
 const DefaultLayout = () => {
-  const { user, token, setUser, setToken } = useStateContext();
+  const { user, token, setUser, setToken, photoUser, setPhotoUser } =
+    useStateContext();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(false);
   const [boardModalOpen, setBoardModalOpen] = useState(false);
   const [boardType, setBoardType] = useState("add");
   const boards = useSelector((state) => state.boards);
   const board = boards.find((board) => board.isActive);
-  useEffect(() => {
-    if (token && user) {
-      axiosClient.get("/user").then(({ data }) => {
-        setUser(data);
-      });
-    }
-  }, [token, user, setUser]);
-
+  useEffect(() => {}, [token, user, setUser]);
+  const getInfo = () => {
+    // Récupérer les données de l'utilisateur (y compris l'URL de l'avatar) lors du chargement initial
+    axiosClient.get("/user").then(({ data }) => {
+      setUser(data);
+    });
+  };
+  getInfo();
   const handleDropdownToggle = () => {
     setDropdownOpen(!isDropdownOpen);
   };
@@ -42,8 +43,8 @@ const DefaultLayout = () => {
     return <Navigate to="/home" />;
   }
   return (
-    <div>
-      <nav className="fixed top-0 z-50 w-full border-b bg-white dark:bg-gray-900  dark:border-gray-700">
+    <div className="bg-gray-100">
+      <nav className="fixed top-0  left-64 z-50 right-0  pt-2 bg-gray-100 dark:bg-gray-900  ">
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start rtl:justify-end">
@@ -71,34 +72,26 @@ const DefaultLayout = () => {
                   ></path>
                 </svg>
               </button>
-              <a href="https://tac-tic.net/" className="flex items-center ">
-                <img
-                  src="/logo2.png"
-                  className="h-12 mr-1 md:h-8 lg:h-12"
-                  alt="TacTicFlowLogo"
-                />
-                <span
-                  className={` text-2xl  font-bold font-inherit mt-1 dark:text-white text-[#212177]  ${
-                    typeof window !== "undefined" && window.innerWidth < 600
-                      ? "text-lg"
-                      : ""
-                  }`}
-                  style={{
-                    letterSpacing: window.innerWidth < 600 ? "2px" : "4px",
-                  }}
-                >
-                  actiwFlow
-                </span>
-              </a>
             </div>
 
             {/* right side  */}
-            <div className="flex space-x-4 items-center md:space-x-6">
+            <div className="flex  space-x-4 items-center md:space-x-6">
+              <div className="flex absolute left-12 top-5  md:top-8 items-center justify-start">
+                {/* Ajout de l'icône et du texte "Dashboard" */}
+                <Link to="/">
+                  <span className="flex ml-3 items-start space-x-1  text-midnightblue  dark:text-gray-400 font-medium text-lg">
+                    <FontAwesomeIcon icon={faHome} className="w-5 mt-1 h-5" />
+                    <span className="dark:text-gray-400 text-midnightblue">
+                      Dashboard
+                    </span>
+                  </span>
+                </Link>
+              </div>
               <div className="flex space-x-4 items-center md:space-x-6">
                 <button
                   className="bg-midnightblue py-2 px-4 rounded-full 
         text-white text-base font-semibold hover:opacity-80
-        duration-200 button hidden md:block"
+        duration-200 button hidden md:block dark:bg-indigo-500"
                   onClick={() => {
                     setBoardModalOpen((state) => !state);
                   }}
@@ -120,22 +113,38 @@ const DefaultLayout = () => {
                   <button
                     type="button"
                     onClick={handleDropdownToggle}
-                    className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                    className="flex text-sm  rounded-full "
                     aria-expanded={isDropdownOpen}
                     data-dropdown-toggle="dropdown-user"
                   >
                     <span className="sr-only">Open user menu</span>
-                    <img
-                      className="w-8 h-8 rounded-full"
-                      src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                      alt="user photo"
-                    />
+
+                    {user.avatar ? (
+                      <img
+                        src={user.avatar}
+                        alt="Profile"
+                        className="h-10 w-10 rounded-full"
+                      />
+                    ) : (
+                      <svg
+                        className="h-12 w-12 text-gray-300"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    )}
                   </button>
                 </div>
                 <div
                   className={`${
                     isDropdownOpen ? "block" : "hidden"
-                  } z-50 absolute right-0 mt-60 text-base list-none bg-white divide-y rounded shadow dark:bg-gray-700 dark:divide-gray-600`}
+                  } z-50 absolute right-0 mt-60 mr-11 w-56 text-base list-none bg-white divide-y rounded shadow dark:bg-gray-700 dark:divide-gray-600`}
                   id="dropdown-user"
                 >
                   <div className="px-4 py-3">
@@ -148,20 +157,21 @@ const DefaultLayout = () => {
                   </div>
                   <ul className="py-1">
                     <li>
-                      <a
+                      <Link
+                        to="/projects"
                         href="#"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                       >
                         Projects
-                      </a>
+                      </Link>
                     </li>
                     <li>
-                      <a
-                        href="#"
+                      <Link
+                        to="./profile"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                       >
                         Edit Profil
-                      </a>
+                      </Link>
                     </li>
                     <li>
                       <button onClick={onLogout}>
@@ -183,16 +193,36 @@ const DefaultLayout = () => {
 
       <aside
         id="logo-sidebar"
-        className="fixed top-0 left-0 bg-white dark:bg-gray-900 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full  border-r border-gray-200 sm:translate-x-0  dark:border-gray-700"
+        className="fixed -translate-y-10 left-0 bg-white dark:bg-gray-900 z-40 w-64 h-screen pt-5 transition-transform -translate-x-full  border-r border-gray-200 sm:translate-x-0  dark:border-gray-700"
       >
-        <div className="h-full px-3 pb-4 overflow-y-auto  bg-white dark:bg-gray-900">
-          <ul className="space-y-2 font-medium">
+        <div className="h-full px-3  overflow-y-auto  bg-white dark:bg-gray-900">
+          <a href="https://tac-tic.net/" className="flex pb-4 items-center ">
+            <img
+              src="/logo2.png"
+              className="h-12 mr-1 md:h-8 lg:h-12"
+              alt="TacTicFlowLogo"
+            />
+            <span
+              className={` text-2xl  font-bold font-inherit mt-1 dark:text-white text-[#212177]  ${
+                typeof window !== "undefined" && window.innerWidth < 600
+                  ? "text-lg"
+                  : ""
+              }`}
+              style={{
+                letterSpacing: window.innerWidth < 600 ? "2px" : "4px",
+              }}
+            >
+              actiwFlow
+            </span>
+          </a>
+          <ul className="space-y-6 mt-4 ml-4 font-medium">
             <li>
               <Link to="/projects">
                 <a
                   href="#"
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  className="logo flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-indigo-500 group"
                 >
+                  {" "}
                   <svg
                     className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                     aria-hidden="true"
@@ -210,15 +240,42 @@ const DefaultLayout = () => {
                   <span className="flex-1 ms-3 whitespace-nowrap">
                     Projects
                   </span>
-                </a>{" "}
+                </a>
               </Link>
             </li>
 
             <li>
+              <Link
+                to="/profile"
+                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-indigo-500 group"
+              >
+                <FontAwesomeIcon
+                  icon={faUser}
+                  className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                />
+                <span className="flex-1 ms-3 whitespace-nowrap">Profil</span>
+              </Link>
+            </li>
+            <li>
               <a
                 href="#"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-indigo-500 group"
               >
+                <FontAwesomeIcon
+                  icon={faTasks}
+                  className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                />
+                <span className="flex-1 ms-3 whitespace-nowrap">Progress</span>
+              </a>
+            </li>
+
+            <li>
+              <Link
+                to="/user"
+                className="flex items-center p-2 text-gray-900 rounded-lg
+    dark:text-white hover:bg-gray-100 dark:hover:bg-indigo-500 group"
+              >
+                {" "}
                 <svg
                   className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                   aria-hidden="true"
@@ -233,32 +290,6 @@ const DefaultLayout = () => {
                 >
                   <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
                 </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">Profil</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <FontAwesomeIcon
-                  icon={faTasks}
-                  className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                />
-                <span className="flex-1 ms-3 whitespace-nowrap">Progress</span>
-              </a>
-            </li>
-
-            <li>
-              <Link
-                to="/user"
-                className="flex items-center p-2 text-gray-900 rounded-lg
-    dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <FontAwesomeIcon
-                  icon={faUser}
-                  className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                />
                 <span className="flex-1 ms-3 whitespace-nowrap">User</span>
               </Link>
             </li>
@@ -266,7 +297,7 @@ const DefaultLayout = () => {
             <li>
               <a
                 href="#"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-indigo-500 group"
               >
                 <svg
                   className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -291,7 +322,7 @@ const DefaultLayout = () => {
               </a>
             </li>
             <li>
-              <div className="fixed bottom-0 left-0 w-full">
+              <div className="fixed bottom-4 left-0 w-full">
                 <HeaderDropdown
                   setBoardModalOpen={setBoardModalOpen}
                   setOpenDropdown={setOpenDropdown}
@@ -302,9 +333,9 @@ const DefaultLayout = () => {
         </div>
       </aside>
 
-      <div className="sm:ml-64">
+      <div className="sm:ml-64 dark:bg-slate-900 h-screen">
         <div className="  rounded-lg dark:border-gray-700 mt-10">
-          <div className="flex items-center justify-center pt-6 rounded  ">
+          <div className="flex  items-center justify-center pt-6 rounded  ">
             {boardModalOpen && (
               <AddEditBoardModal
                 type={boardType}

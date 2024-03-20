@@ -107,7 +107,9 @@ const Section = ({ status, tasks, setTasks, todos, doings, dones }) => {
   return (
     <div
       ref={drop}
-      className={`w-64 rounded-md p-2 ${isOver ? "bg-slate-200" : ""}`}
+      className={`w-64 bg-slate-200 h-fit dark:bg-gray-700 dark:bg-opacity-80   rounded-md p-2 ${
+        isOver ? "bg-opacity-30" : "bg-opacity-70"
+      }`}
     >
       {" "}
       <Header text={text} bg={bg} count={tasksToMap.length} />{" "}
@@ -130,6 +132,7 @@ const Header = ({ text, bg, count }) => {
     </div>
   );
 };
+
 const Task = ({ task, tasks, setTasks }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "task",
@@ -138,13 +141,19 @@ const Task = ({ task, tasks, setTasks }) => {
       isDragging: !!monitor.isDragging(),
     }),
   }));
+  const onDelete = async (taskId) => {
+    try {
+      await axiosClient.delete(`/tasks/${taskId}`);
+      setTasks(tasks.filter((task) => task.id !== taskId));
+      toast.success("Task removed successfully");
+    } catch (error) {
+      console.error("Error deleting task:", error);
+      toast.error("Error deleting task. Please try again.");
+    }
+  };
   console.log(isDragging);
   const handleremove = (id) => {
-    console.log(id);
-    const fTasks = tasks.filter((t) => t.id !== id);
-    localStorage.setItem("tasks", JSON.stringify(fTasks));
-    setTasks(fTasks);
-    toast("Task removed", { icon: "👽" });
+    onDelete(id);
   };
   return (
     <div

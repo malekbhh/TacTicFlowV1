@@ -16,7 +16,8 @@ const ProjectDetails = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <Toaster />
-      <div className="dark:bg-slate-900 w-screen h-screen flex flex-col p-3 items-center pt-32 gap-16">
+      <div className=" ml-16 mt-28   rounded-[30px]   justify-start flex flex-col border-slate-500 pb-40 h-full  items-start w-[100%] gap-16">
+        {" "}
         <CreateTask projectId={projectId} setTasks={setTasks} />
         <ListTasks projectId={projectId} tasks={tasks} setTasks={setTasks} />
       </div>

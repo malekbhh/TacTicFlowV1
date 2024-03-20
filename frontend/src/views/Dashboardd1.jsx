@@ -7,8 +7,8 @@ import AddEditBoardModal from "../modals/AddEditBoardModal.jsx";
 import HeaderDropdown from "../components/HeaderDropdown.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faTasks } from "@fortawesome/free-solid-svg-icons";
-
+import { faUser, faTasks, faHome } from "@fortawesome/free-solid-svg-icons";
+//color dark:bg-[#F35F34]
 const Dashboardd1 = () => {
   const [activeItem, setActiveItem] = useState(1);
   const handleItemClick = (index) => {
@@ -47,8 +47,8 @@ const Dashboardd1 = () => {
     return <Navigate to="/home" />;
   }
   return (
-    <div className="  h-screen">
-      <nav className="fixed  top-0 z-50 w-full  ">
+    <div className="dark:bg-[#150E39] bg-gray-100  h-screen">
+      <nav className="fixed  top-3 z-50 w-full  ">
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start rtl:justify-end">
@@ -78,10 +78,24 @@ const Dashboardd1 = () => {
             </div>
 
             {/* right side  */}
-            <div className="flex space-x-4   items-center md:space-x-6">
-              <div className="flex bg-white dark:bg-slate-900  rounded-full space-x-4 items-center md:space-x-6">
+            <div className="flex space-x-4   items-center md:space-x-4">
+              <div className="flex absolute left-12 top-5 md:left-72 md:top-8 items-center justify-start">
+                {/* Ajout de l'icône et du texte "Dashboard" */}
+                <Link to="/">
+                  <span className="flex ml-3 items-start space-x-1 text-white  dark:text-gray-400 font-medium text-lg">
+                    <FontAwesomeIcon
+                      icon={faHome}
+                      className="w-5 text-midnightblue dark:text-gray-400 mt-1 h-5"
+                    />
+                    <span className="dark:text-gray-400 text-midnightblue">
+                      / Dashboard
+                    </span>
+                  </span>
+                </Link>
+              </div>
+              <div className="flex bg-white dark:bg-slate-900  rounded-full space-x-4 items-center ">
                 <button
-                  className=" gradient-text bg-midnightblue text-white py-2 px-4 rounded-full 
+                  className=" gradient-text text-white shadow-lg bg-midnightblue bg-gray-[#DADBDD] dark:bg-indigo-500 dark:text-white py-2 px-4 rounded-full 
         text-base font-semibold hover:opacity-80
         duration-200 button hidden md:block"
                   onClick={() => {
@@ -100,7 +114,7 @@ const Dashboardd1 = () => {
                 </button>
               </div>
 
-              <div className="flex items-center  ms-3">
+              <div className="flex items-center  ">
                 <div>
                   <button
                     type="button"
@@ -179,9 +193,8 @@ const Dashboardd1 = () => {
           pt-4  pl-1
           transition-transform
           -translate-x-full
-          border-r border-gray-200
-          sm:translate-x-0
-bg-gradient-to-b from-gray-100 to-gray-400
+          sm:translate-x-0 
+bg-white shadow-lg
           dark:bg-gradient-to-b  dark:from-[#251F54] dark:to-[#150E35]
           dark:border-gray-700
         "
@@ -207,13 +220,25 @@ bg-gradient-to-b from-gray-100 to-gray-400
               <Link to="/projects">
                 <a
                   href="#"
-                  className="logo flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-indigo-500 group"
+                  className="flex items-center hover:text-gray-900 p-2 text-midnightblue rounded-lg
+                  dark:text-white hover:bg-gray-100 dark:hover:bg-indigo-500 group"
                 >
+                  {" "}
+                  <svg
+                    className="flex-shrink-0 w-5 h-5 text-midnightblue transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 18 18"
+                    strokeWidth="2"
+                    clipRule="evenodd" // Change 'clip-rule' to 'clipRule'
+                    fillRule="evenodd" // Change 'fill-rule' to 'fillRule'
+                    strokeLinecap="round" // Change 'stroke-linecap' to 'strokeLinecap'
+                    strokeLinejoin="round"
+                  >
+                    <path d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z" />
+                  </svg>
                   <span className="flex-1 ms-3 whitespace-nowrap">
-                    <FontAwesomeIcon
-                      icon={["fas", "grip-horizontal"]}
-                      className="w-5 h-5 text-gray-500 -translate-x-3 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                    />
                     Projects
                   </span>
                 </a>
@@ -223,11 +248,12 @@ bg-gradient-to-b from-gray-100 to-gray-400
             <li>
               <a
                 href="#"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-indigo-500 group"
+                className="flex items-center hover:text-gray-900 p-2 text-midnightblue rounded-lg
+                dark:text-white hover:bg-gray-100 dark:hover:bg-indigo-500 group"
               >
                 <FontAwesomeIcon
                   icon={faUser}
-                  className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                  className="w-5 h-5 text-midnightblue transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                 />
                 <span className="flex-1 ms-3 whitespace-nowrap">Profil</span>
               </a>
@@ -235,11 +261,12 @@ bg-gradient-to-b from-gray-100 to-gray-400
             <li>
               <a
                 href="#"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-indigo-500 group"
+                className="flex items-center hover:text-gray-900 p-2 text-midnightblue rounded-lg
+                dark:text-white hover:bg-gray-100 dark:hover:bg-indigo-500 group"
               >
                 <FontAwesomeIcon
                   icon={faTasks}
-                  className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                  className="w-5 h-5 text-midnightblue transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                 />
                 <span className="flex-1 ms-3 whitespace-nowrap">Progress</span>
               </a>
@@ -248,12 +275,12 @@ bg-gradient-to-b from-gray-100 to-gray-400
             <li>
               <Link
                 to="/user"
-                className="flex items-center p-2 text-gray-900 rounded-lg
-    dark:text-white hover:bg-gray-100 dark:hover:bg-indigo-500 group"
+                className="flex items-center hover:text-gray-900 p-2 text-midnightblue rounded-lg
+                dark:text-white hover:bg-gray-100 dark:hover:bg-indigo-500 group"
               >
                 {" "}
                 <svg
-                  className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                  className="flex-shrink-0 w-5 h-5 text-midnightblue transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
@@ -273,10 +300,11 @@ bg-gradient-to-b from-gray-100 to-gray-400
             <li>
               <a
                 href="#"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-indigo-500 group"
+                className="flex items-center hover:text-gray-900 p-2 text-midnightblue rounded-lg
+                dark:text-white hover:bg-gray-100 dark:hover:bg-indigo-500 group"
               >
                 <svg
-                  className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                  className="flex-shrink-0 w-5 h-5 text-midnightblue transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

@@ -46,5 +46,18 @@ class TaskController extends Controller
         }
       }
         
- 
+      public function deleteTask($taskId)
+      {
+          try {
+              // Recherchez la tâche à supprimer
+              $task = Task::findOrFail($taskId);
+              // Supprimez la tâche
+              $task->delete();
+  
+              return response()->json(['message' => 'Task deleted successfully']);
+          } catch (\Exception $e) {
+              return response()->json(['error' => 'Failed to delete task'], 500);
+          }
+      }
+  
 }    
